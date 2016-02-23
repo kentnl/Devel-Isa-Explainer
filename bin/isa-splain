@@ -1,0 +1,21 @@
+#!perl
+use 5.006;
+use strict;
+use warnings;
+
+package # Hideme
+  App::Isa::Splain::_Script;
+
+our $VERSION = '0.001000';
+
+# AUTHORITY
+
+# ABSTRACT: Visualize Module Hierarchies on the command line
+
+use App::Isa::Splain;
+
+App::Isa::Splain->new_from_ARGV->run;
+
+=head1 DESCRIPTION
+
+See L<< C<App::Isa::Splain> |App::Isa::Splain >> For details.

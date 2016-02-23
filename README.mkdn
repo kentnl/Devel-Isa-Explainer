@@ -1,0 +1,75 @@
+# NAME
+
+Devel::Isa::Explainer - Pretty Print Function Hierarchies of Classes
+
+# VERSION
+
+version 0.001000
+
+# SYNOPSIS
+
+    use Devel::Isa::Explainer;
+
+    # Load it yourself first
+    print explain_isa('Dist::Zilla::Dist::Builder');
+
+# DESCRIPTION
+
+This module is a simple tool for quickly visualizing inheritance hierarchies to quickly
+see what functions are available for a given class, or to ascertain where a given function
+you might see in use is coming from.
+
+This module does not concern itself with any of the fanciness of Roles, and instead, relies entirely
+on standard Perl5 Object Model infrastructure. ( Roles are effectively invisible at run-time as
+they appear as composed functions in the corresponding class )
+
+<div>
+    <center><img alt="A Display of a simple output from simple usage" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/c3.png" width="761" height="373" /></center>
+</div>
+
+## Conventional Sub Name Interpretation
+
+This module utilizes a cultural understanding of the naming conventions that are standardized
+on `CPAN`, and applies color highlighting to make them stand out.
+
+For instance:
+
+- all lower case subs are assumed to be normal methods/functions
+- all upper case subs are assumed to be used for semi-private inter-module interoperability
+( for instance, `DESTROY`, `BUILDALL` )
+- subs with a leading underscore are assumed to be private methods/functions
+- subs with `CamelCase` naming are assumed to be uncleaned Moose/Types::Tiny type-constraint subs
+- subs starting with `is_` `to_` and `assert_` followed by `CamelCase` lettering are assumed to
+be uncleaned type-constraint utility subs.
+
+<div>
+    <center><img alt="A Display of different functions highlighted by convention" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/c2.png" width="480" height="578" /></center>
+</div>
+
+## Inheritance Aware Sub Shadowing
+
+This module analyses the presence of "Shadowed" subs by indicating specifically
+when a given module has an overriding sub in higher context.
+
+We don't do any work to ascertain if in fact the higher sub chains to the shadowed one or
+not, but we merely indicate that there's a possibility, and show where the default method
+call will get routed on the relevant class.
+
+# FUNCTIONS
+
+## `explain_isa`
+
+    print explain_isa( $loaded_module_name );
+
+Returns a pretty-printed formatted description of the class referenced by `$loaded_module_name`
+
+# AUTHOR
+
+Kent Fredric &lt;kentnl@cpan.org>
+
+# COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2016 by Kent Fredric &lt;kentfredric@gmail.com>.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
