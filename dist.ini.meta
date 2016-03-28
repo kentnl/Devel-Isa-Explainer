@@ -19,6 +19,13 @@ srcreadme         = mkdn
 ; twitter_extra_hash_tags =
 ; auto_prereqs_skip = File::Find
 
+[FileFinder::ByName / :ExtraTestFiles]
+dir = inc/
+dir = xt/author
+dir = xt/release
+dir = xt/smoke
+match = \.(t|pm)$
+
 [ExecDir]
 dir = bin
 [Prereqs]

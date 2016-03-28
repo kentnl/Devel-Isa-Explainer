@@ -213,8 +213,6 @@ sub _pp_class {
 
 =head1 DESCRIPTION
 
-=begin :description_text
-
 This module is a simple tool for quickly visualizing inheritance hierarchies to quickly
 see what functions are available for a given class, or to ascertain where a given function
 you might see in use is coming from.
@@ -258,5 +256,3 @@ when a given module has an overriding sub in higher context.
 We don't do any work to ascertain if in fact the higher sub chains to the shadowed one or
 not, but we merely indicate that there's a possibility, and show where the default method
 call will get routed on the relevant class.
-
-=end :description_text
