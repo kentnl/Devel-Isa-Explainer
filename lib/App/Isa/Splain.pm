@@ -80,6 +80,7 @@ sub run {
   my $instance = App::Isa::Splain->new_from_ARGV;
   $instance->run;
 
+=for html <center><img alt="Colorised output from a Moose::Meta::Class" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/c1.png" width="584" height="697" /></center>
 
 =head1 COMMAND LINE ARGUMENTS
 
@@ -92,5 +93,3 @@ sub run {
 A module to C<require> and analyze the C<ISA> of.
 
 =back
-
-
