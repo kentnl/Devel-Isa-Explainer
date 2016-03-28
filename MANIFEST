@@ -14,6 +14,7 @@ README
 bin/isa-splain
 dist.ini
 dist.ini.meta
+inc/H1Nester.pm
 lib/App/Isa/Splain.pm
 lib/Devel/Isa/Explainer.pm
 maint/perlcritic.rc.gen.pl

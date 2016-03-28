@@ -38,6 +38,7 @@
             "Dist::Zilla::Plugin::ConfirmRelease" : "0",
             "Dist::Zilla::Plugin::CopyFilesFromBuild" : "0",
             "Dist::Zilla::Plugin::ExecDir" : "0",
+            "Dist::Zilla::Plugin::FileFinder::ByName" : "0",
             "Dist::Zilla::Plugin::Git::Check" : "0",
             "Dist::Zilla::Plugin::Git::Commit" : "0",
             "Dist::Zilla::Plugin::Git::CommitBuild" : "0",
@@ -134,6 +135,17 @@
       }
    },
    "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/kentnl/Devel-Isa-Explainer/issues"
+      },
+      "homepage" : "https://github.com/kentnl/Devel-Isa-Explainer",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/kentnl/Devel-Isa-Explainer.git",
+         "web" : "https://github.com/kentnl/Devel-Isa-Explainer"
+      }
+   },
    "version" : "0.001000",
    "x_BuiltWith" : {
       "external_file" : "misc/built_with.json"
@@ -416,13 +428,13 @@
                   "plugins" : [
                      {
                         "class" : "Pod::Weaver::Plugin::EnsurePod5",
-                        "name" : "@CorePrep/EnsurePod5",
+                        "name" : "-EnsurePod5",
                         "version" : "4.012"
                      },
                      {
-                        "class" : "Pod::Weaver::Plugin::H1Nester",
-                        "name" : "@CorePrep/H1Nester",
-                        "version" : "4.012"
+                        "class" : "inc::H1Nester",
+                        "name" : "=inc::H1Nester",
+                        "version" : null
                      },
                      {
                         "class" : "Pod::Weaver::Plugin::SingleEncoding",
@@ -452,11 +464,6 @@
                      {
                         "class" : "Pod::Weaver::Section::Generic",
                         "name" : "DESCRIPTION",
-                        "version" : "4.012"
-                     },
-                     {
-                        "class" : "Pod::Weaver::Section::Region",
-                        "name" : "description_text",
                         "version" : "4.012"
                      },
                      {
@@ -817,6 +824,11 @@
             "version" : "5.043"
          },
          {
+            "class" : "Dist::Zilla::Plugin::FileFinder::ByName",
+            "name" : ":ExtraTestFiles",
+            "version" : "5.043"
+         },
+         {
             "class" : "Dist::Zilla::Plugin::ExecDir",
             "name" : "ExecDir",
             "version" : "5.043"
@@ -845,11 +857,6 @@
          {
             "class" : "Dist::Zilla::Plugin::FinderCode",
             "name" : ":TestFiles",
-            "version" : "5.043"
-         },
-         {
-            "class" : "Dist::Zilla::Plugin::FinderCode",
-            "name" : ":ExtraTestFiles",
             "version" : "5.043"
          },
          {
