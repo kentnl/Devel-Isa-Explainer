@@ -16,14 +16,14 @@ use Carp            ('croak');
 use Package::Stash  ();
 use MRO::Compat     ();
 
-BEGIN { *import = \&Exporter::import } ## no critic (ProhibitCallsToUnexportedSubs)
+BEGIN { *import = \&Exporter::import }    ## no critic (ProhibitCallsToUnexportedSubs)
 
-our @EXPORT = qw( explain_isa ); ## no critic (ProhibitAutomaticExportation)
+our @EXPORT = qw( explain_isa );          ## no critic (ProhibitAutomaticExportation)
 
 use constant 1.03 { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' E<%s#%d>', __PACKAGE__, $_ ), ) } 1 .. 4 };
 
 {
-  no strict 'refs';    # namespace clean
+  no strict 'refs';                       # namespace clean
   delete ${ __PACKAGE__ . q[::] }{ sprintf '_E%x', $_ } for 1 .. 4;
 }
 
@@ -40,6 +40,7 @@ our @SHADOWED_PUBLIC  = qw( red );
 our $MAX_WIDTH     = 80;
 our $SHOW_SHADOWED = 1;
 our $INDENT        = q[ ] x 4;
+our $SHADOW_SUFFIX = q{[s]};
 our $CLUSTERING    = 'type_clustered';
 
 =func C<explain_isa>
@@ -77,9 +78,19 @@ sub _hl_TYPE_UTIL {
   }
   return $_[0];
 }
+
 sub _hl_TYPE { return colored( \@TYPE, $_[0] ) }
-sub _hl_PUBLIC  { return $_[1] ? colored( \@SHADOWED_PUBLIC,  $_[0] ) : colored( \@PUBLIC,  $_[0] ) }
-sub _hl_PRIVATE { return $_[1] ? colored( \@SHADOWED_PRIVATE, $_[0] ) : colored( \@PRIVATE, $_[0] ) }
+
+sub _hl_PUBLIC {
+  my $suffix = $_[2] ? colored( \@SHADOWED_PUBLIC, $SHADOW_SUFFIX ) : q[];
+
+  return ( $_[1] ? colored( \@SHADOWED_PUBLIC, $_[0] ) : colored( \@PUBLIC, $_[0] ) ) . $suffix;
+}
+
+sub _hl_PRIVATE {
+  my $suffix = $_[2] ? colored( \@SHADOWED_PRIVATE, $SHADOW_SUFFIX ) : q[];
+  return ( $_[1] ? colored( \@SHADOWED_PRIVATE, $_[0] ) : colored( \@PRIVATE, $_[0] ) ) . $suffix;
+}
 
 sub _pp_function {
   return __PACKAGE__->can( '_hl_' . _function_type( $_[0] ) )->(@_);
@@ -92,8 +103,13 @@ sub _pp_key {
   push @tokens, 'Type Constraint Utility: ' . _hl_TYPE_UTIL('typeop_TypeName');
   push @tokens, 'Private/Boring Function: ' . _hl_PRIVATE('foo_example');
   if ($SHOW_SHADOWED) {
+    push @tokens, 'Public Function Shadowing another: ' . _hl_PUBLIC( 'shadowing_example', 0, 1 );
     push @tokens, 'Public Function shadowed by higher scope: ' . _hl_PUBLIC( 'shadowed_example', 1 );
+    push @tokens, 'Public Function Shadowing another and shadowed itself: ' . _hl_PUBLIC( 'shadowed_shadowing_example', 1, 1 );
+
+    push @tokens, 'Private/Boring Function Shadowing another: ' . _hl_PRIVATE( 'shadowing_example', 0, 1 );
     push @tokens, 'Private/Boring Function shadowed by higher scope: ' . _hl_PRIVATE( 'shadowed_example', 1 );
+    push @tokens, 'Private/Boring Function another and shadowed itself: ' . _hl_PRIVATE( 'shadowing_shadowed_example', 1, 1 );
   }
   push @tokens, 'No Functions: ()';
   return sprintf "Key:\n$INDENT%s\n\n", join qq[\n$INDENT], @tokens;
@@ -169,37 +185,77 @@ sub _pp_functions {
 
     # Suck up trailing ,
     $cluster_out =~ s/,[ ]\n\z/\n/sx;
-    $cluster_out =~ s{(\w+)}{ _pp_function($1, $functions{$1}) }gsex;
+    $cluster_out =~ s{(\w+)}{ _pp_function($1, $functions{$1}->{shadowed}, $functions{$1}->{shadowing} ) }gsex;
     push @out_clusters, $cluster_out;
   }
   return join qq[\n], @out_clusters;
 }
 
 sub _pp_class {
-  my ($class)        = @_;
-  my $out            = q[];
-  my $seen_functions = {};
-  ## no critic (ProhibitCallstoUnexportedSubs)
-  for my $isa ( @{ mro::get_linear_isa($class) } ) {
-    $out .= colored( ['green'], $isa ) . q[:];
-    my (@my_functions) = _class_functions($isa);
-    if ( not @my_functions ) {
+  my ($class)   = @_;
+  my $out       = q[];
+  my $mro_order = _extract_mro($class);
+  for my $mro_entry ( @{$mro_order} ) {
+    $out .= colored( ['green'], $mro_entry->{class} ) . q[:];
+    my (%functions) = %{ $mro_entry->{functions} };
+    if ( not keys %functions ) {
       $out .= " ()\n";
       next;
     }
     else { $out .= "\n" }
-    my %function_map;
-    for my $function (@my_functions) {
-      if ( not exists $seen_functions->{$function} ) {
-        $seen_functions->{$function} = $isa;
-      }
-      $function_map{$function} = ( $seen_functions->{$function} ne $isa );
-    }
-    $out .= _pp_functions(%function_map) . "\n";
+    $out .= _pp_functions(%functions) . "\n";
 
     next;
   }
   return $out;
+}
+
+sub _extract_mro {
+  my ($class) = @_;
+  my (@mro_order);
+  my ($seen_functions) = {};
+
+  # Walk down finding shadowing
+  ## no critic (ProhibitCallstoUnexportedSubs)
+  for my $isa ( @{ mro::get_linear_isa($class) } ) {
+    my (@functions) = _class_functions($isa);
+    if ( not @functions ) {
+      push @mro_order,
+        {
+        class     => $isa,
+        functions => {},
+        };
+      next;
+    }
+    my %function_map;
+    for my $function (@functions) {
+      $function_map{$function} = {
+        shadowed  => 0,
+        shadowing => 0,
+      };
+
+      # The first incarnation of a function shadows the rest.
+      if ( not exists $seen_functions->{$function} ) {
+        $seen_functions->{$function} = $isa;
+      }
+
+      # If we are shadowed, mark ourselves shadowed,
+      # and mark all children as shadowers
+      if ( $seen_functions->{$function} ne $isa ) {
+        $function_map{$function}->{shadowed} = 1;
+        for my $child_class (@mro_order) {
+          next unless exists $child_class->{functions}->{$function};
+          $child_class->{functions}->{$function}->{shadowing} = 1;
+        }
+      }
+    }
+    push @mro_order,
+      {
+      class     => $isa,
+      functions => \%function_map,
+      };
+  }
+  return \@mro_order;
 }
 
 1;
@@ -221,7 +277,7 @@ This module does not concern itself with any of the fanciness of Roles, and inst
 on standard Perl5 Object Model infrastructure. ( Roles are effectively invisible at run-time as
 they appear as composed functions in the corresponding class )
 
-=for html <center><img alt="A Display of a simple output from simple usage" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/c3.png" width="761" height="373" /></center>
+=for html <center><img alt="A Display of a simple output from simple usage" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/c3.png" width="552" height="413" /></center>
 
 =head2 Conventional Sub Name Interpretation
 
@@ -246,7 +302,7 @@ be uncleaned type-constraint utility subs.
 
 =back
 
-=for html <center><img alt="A Display of different functions highlighted by convention" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/c2.png" width="480" height="578" /></center>
+=for html <center><img alt="A Display of different functions highlighted by convention" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/c2.png" width="474" height="619" /></center>
 
 =head2 Inheritance Aware Sub Shadowing
 
