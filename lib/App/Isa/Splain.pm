@@ -94,6 +94,8 @@ version 0.001000
   my $instance = App::Isa::Splain->new_from_ARGV;
   $instance->run;
 
+=for html <center><img alt="Colorised output from a Moose::Meta::Class" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/c1.png" width="592" height="678" /></center>
+
 =head1 METHODS
 
 =head2 C<new>
