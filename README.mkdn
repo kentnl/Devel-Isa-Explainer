@@ -24,7 +24,7 @@ on standard Perl5 Object Model infrastructure. ( Roles are effectively invisible
 they appear as composed functions in the corresponding class )
 
 <div>
-    <center><img alt="A Display of a simple output from simple usage" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/c3.png" width="552" height="413" /></center>
+    <center><img alt="A Display of a simple output from simple usage" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/c3.png" width="820" height="559" /></center>
 </div>
 
 ## Conventional Sub Name Interpretation
@@ -43,7 +43,7 @@ For instance:
 be uncleaned type-constraint utility subs.
 
 <div>
-    <center><img alt="A Display of different functions highlighted by convention" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/c2.png" width="474" height="619" /></center>
+    <center><img alt="A Display of different functions highlighted by convention" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/c2.png" width="820" height="738" /></center>
 </div>
 
 ## Inheritance Aware Sub Shadowing
