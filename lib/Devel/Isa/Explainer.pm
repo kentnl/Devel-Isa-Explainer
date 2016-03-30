@@ -80,7 +80,7 @@ sub _hl_TYPE_UTIL {
 }
 
 sub _hl_SUFFIX {
-  return !$_[1] ? '' : colored( $_[0], $SHADOW_SUFFIX );
+  return !$_[1] ? q[] : colored( $_[0], $SHADOW_SUFFIX );
 }
 
 sub _hl_TYPE { return colored( \@TYPE, $_[0] ) }
