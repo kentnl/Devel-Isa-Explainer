@@ -40,7 +40,7 @@ our @SHADOWED_PUBLIC  = qw( red );
 our $MAX_WIDTH     = 80;
 our $SHOW_SHADOWED = 1;
 our $INDENT        = q[ ] x 4;
-our $SHADOW_SUFFIX = q{[s]};
+our $SHADOW_SUFFIX = q{(^)};
 our $CLUSTERING    = 'type_clustered';
 
 
@@ -79,17 +79,18 @@ sub _hl_TYPE_UTIL {
   return $_[0];
 }
 
+sub _hl_SUFFIX {
+  return !$_[1] ? '' : colored( $_[0], $SHADOW_SUFFIX );
+}
+
 sub _hl_TYPE { return colored( \@TYPE, $_[0] ) }
 
 sub _hl_PUBLIC {
-  my $suffix = $_[2] ? colored( \@SHADOWED_PUBLIC, $SHADOW_SUFFIX ) : q[];
-
-  return ( $_[1] ? colored( \@SHADOWED_PUBLIC, $_[0] ) : colored( \@PUBLIC, $_[0] ) ) . $suffix;
+  return ( $_[1] ? colored( \@SHADOWED_PUBLIC, $_[0] ) : colored( \@PUBLIC, $_[0] ) ) . _hl_SUFFIX( \@SHADOWED_PUBLIC, $_[2] );
 }
 
 sub _hl_PRIVATE {
-  my $suffix = $_[2] ? colored( \@SHADOWED_PRIVATE, $SHADOW_SUFFIX ) : q[];
-  return ( $_[1] ? colored( \@SHADOWED_PRIVATE, $_[0] ) : colored( \@PRIVATE, $_[0] ) ) . $suffix;
+  return ( $_[1] ? colored( \@SHADOWED_PRIVATE, $_[0] ) : colored( \@PRIVATE, $_[0] ) ) . _hl_SUFFIX( \@SHADOWED_PRIVATE, $_[2] );
 }
 
 sub _pp_function {
