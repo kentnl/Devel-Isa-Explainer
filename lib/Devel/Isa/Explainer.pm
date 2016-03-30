@@ -79,18 +79,18 @@ sub _hl_TYPE_UTIL {
   return $_[0];
 }
 
-sub _hl_SUFFIX {
+sub _hl_suffix {
   return !$_[1] ? q[] : colored( $_[0], $SHADOW_SUFFIX );
 }
 
 sub _hl_TYPE { return colored( \@TYPE, $_[0] ) }
 
 sub _hl_PUBLIC {
-  return ( $_[1] ? colored( \@SHADOWED_PUBLIC, $_[0] ) : colored( \@PUBLIC, $_[0] ) ) . _hl_SUFFIX( \@SHADOWED_PUBLIC, $_[2] );
+  return ( $_[1] ? colored( \@SHADOWED_PUBLIC, $_[0] ) : colored( \@PUBLIC, $_[0] ) ) . _hl_suffix( \@SHADOWED_PUBLIC, $_[2] );
 }
 
 sub _hl_PRIVATE {
-  return ( $_[1] ? colored( \@SHADOWED_PRIVATE, $_[0] ) : colored( \@PRIVATE, $_[0] ) ) . _hl_SUFFIX( \@SHADOWED_PRIVATE, $_[2] );
+  return ( $_[1] ? colored( \@SHADOWED_PRIVATE, $_[0] ) : colored( \@PRIVATE, $_[0] ) ) . _hl_suffix( \@SHADOWED_PRIVATE, $_[2] );
 }
 
 sub _pp_function {
