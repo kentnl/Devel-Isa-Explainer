@@ -353,13 +353,13 @@ Returns a pretty-printed formatted description of the class referenced by C<$loa
 =item * C<< (id: Devel::Isa::Explainer#1) >>
 
 C<explain_isa()> expects exactly one argument, a (loaded) module name to print
-the C<ISA> hierachy of. You passed either 0 arguments ( too few to be useful )
+the C<ISA> hierarchy of. You passed either 0 arguments ( too few to be useful )
 or too many ( Which silently ignoring might block us from adding future enhancements )
 
 =item * C<< (id: Devel::Isa::Explainer#2) >>
 
 C<explain_isa( $argument )> expects C<$argument> to be a defined module name, but you
-somehow managed to pass C<undef>. I don't I<think> theres a legitimate use case for a
+somehow managed to pass C<undef>. I don't I<think> there is a legitimate use case for a
 module whos name is undefined, but I could be wrong.
 
 File a bug if you have proof.
