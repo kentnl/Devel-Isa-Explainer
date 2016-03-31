@@ -323,3 +323,46 @@ when a given module has an overriding sub in higher context.
 We don't do any work to ascertain if in fact the higher sub chains to the shadowed one or
 not, but we merely indicate that there's a possibility, and show where the default method
 call will get routed on the relevant class.
+
+=head1 DIAGNOSTICS
+
+=over 4
+
+=item * C<< (id: Devel::Isa::Explainer#1) >>
+
+C<explain_isa()> expects exactly one argument, a (loaded) module name to print
+the C<ISA> hierarchy of. You passed either 0 arguments ( too few to be useful )
+or too many ( Which silently ignoring might block us from adding future enhancements )
+
+=item * C<< (id: Devel::Isa::Explainer#2) >>
+
+C<explain_isa( $argument )> expects C<$argument> to be a defined module name, but you
+somehow managed to pass C<undef>. I don't I<think> there is a legitimate use case for a
+module with an undefined name, but I could be wrong.
+
+File a bug if you have proof.
+
+=item * C<< (id: Devel::Isa::Explainer#3) >>
+
+C<explain_isa( $argument )> expects C<$argument> to have a positive length, but you passed
+an empty string. Again as with L<< |/(id: Devel::Isa::Explainer#2) >>, file a bug if there's a
+real use case here that I missed.
+
+=item * C<< (id: Devel::Isa::Explainer#4) >>
+
+C<explain_isa( $argument )> expects C<$argument> to be a normal scalar value describing
+a module name, but you passed a reference of some passed some kind.
+
+This is presently an error to protect it for future possible use.
+
+=item * C<< (id: Devel::Isa::Explainer#5) >>
+
+When trying to extract subs and inheritance from the module name you passed in
+C<explain_isa( $module_name )>, no C<sub>s could be found, there were no parent classes,
+and the module name in question had never been registered in C<%INC> by Perl.
+
+This indicates that the most likely thing that happened was you forgot to either C<require>
+the module in question first, or you forgot to locally define that package with some classes
+prior to calling C<explain_isa( $module_name )>
+
+=back
