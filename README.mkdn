@@ -8,7 +8,7 @@ version 0.001000
 
 # SYNOPSIS
 
-    use Devel::Isa::Explainer;
+    use Devel::Isa::Explainer qw( explain_isa );
 
     # Load it yourself first
     print explain_isa('Dist::Zilla::Dist::Builder');
