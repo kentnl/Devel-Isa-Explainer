@@ -10,11 +10,11 @@ our $VERSION = '0.001000';
 
 # AUTHORITY
 
-use Exporter        ();
-use Term::ANSIColor ('colored');
-use Carp            ('croak');
-use Package::Stash  ();
-use MRO::Compat     ();
+use Exporter ();
+use Term::ANSIColor 3.00 ('colored');    # bright_
+use Carp           ('croak');
+use Package::Stash ();
+use MRO::Compat    ();
 
 BEGIN { *import = \&Exporter::import }    ## no critic (ProhibitCallsToUnexportedSubs)
 
