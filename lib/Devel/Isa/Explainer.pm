@@ -380,7 +380,7 @@ real use case here that I missed.
 =item * C<< (id: Devel::Isa::Explainer#4) >>
 
 C<explain_isa( $argument )> expects C<$argument> to be a normal scalar value describing
-a module name, but you passed a reference of some passed some kind.
+a module name, but you passed a reference of some kind.
 
 This is presently an error to protect it for future possible use.
 
