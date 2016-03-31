@@ -346,6 +346,49 @@ call will get routed on the relevant class.
 
 Returns a pretty-printed formatted description of the class referenced by C<$loaded_module_name>
 
+=head1 DIAGNOSITCS
+
+=over 4
+
+=item * C<< E<Devel::Isa::Explainer#1> >>
+
+C<explain_isa()> expects exactly one argument, a (loaded) module name to print
+the C<ISA> hierachy of. You passed either 0 arguments ( too few to be useful )
+or too many ( Which silently ignoring might block us from adding future enhancements )
+
+=item * C<< E<Devel::Isa::Explainer#2> >>
+
+C<explain_isa( $argument )> expects C<$argument> to be a defined module name, but you
+somehow managed to pass C<undef>. I don't I<think> theres a legitimate use case for a
+module whos name is undefined, but I could be wrong.
+
+File a bug if you have proof.
+
+=item * C<< E<Devel::Isa::Explainer#3> >>
+
+C<explain_isa( $argument )> expects C<$argument> to have a positive length, but you passed
+an empty string. Again as with L<< |/E<Devel::Isa::Explainer#2> >>, file a bug if there's a
+real use case here that I missed.
+
+=item * C<< E<Devel::Isa::Explainer#4> >>
+
+C<explain_isa( $argument )> expects C<$argument> to be a normal scalar value describing
+a module name, but you passed a reference of some passed some kind.
+
+This is presently an error to protect it for future possible use.
+
+=item * C<< E<Devel::Isa::Explainer#5 >>
+
+When trying to extract subs and inheritance from the module name you passed in
+C<explain_isa( $module_name )>, no C<sub>s could be found, there were no parent classes,
+and the module name in question had never been registered in C<%INC> by perl.
+
+This indicates that the most likely thing that happened was you forgot to either C<require>
+the module in question first, or you forgot to locally define that package with some classes
+prior to calling C<explain_isa( $module_name )>
+
+=back
+
 =head1 AUTHOR
 
 Kent Fredric <kentnl@cpan.org>
