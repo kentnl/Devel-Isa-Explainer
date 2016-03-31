@@ -85,7 +85,7 @@ sub _hl_TYPE_UTIL {
 sub _hl_suffix {
   return colored( $_[0], $SHADOW_SUFFIX )   if $_[2];
   return colored( $_[0], $SHADOWED_SUFFIX ) if $_[1];
-  return '';
+  return q[];
 }
 
 sub _hl_TYPE { return colored( \@TYPE, $_[0] ) }
