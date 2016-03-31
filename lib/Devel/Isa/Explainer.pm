@@ -20,7 +20,7 @@ BEGIN { *import = \&Exporter::import }    ## no critic (ProhibitCallsToUnexporte
 
 our @EXPORT_OK = qw( explain_isa );
 
-use constant 1.03 { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' E<%s#%d>', __PACKAGE__, $_ ), ) } 1 .. 5 };
+use constant 1.03 { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' (id: %s#%d)', __PACKAGE__, $_ ), ) } 1 .. 5 };
 
 {
   no strict 'refs';                       # namespace clean
