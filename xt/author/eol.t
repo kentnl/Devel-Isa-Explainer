@@ -13,7 +13,9 @@ my @files = (
     't/00-compile/lib_App_Isa_Splain_pm.t',
     't/00-compile/lib_Devel_Isa_Explainer_pm.t',
     't/00-report-prereqs.dd',
-    't/00-report-prereqs.t'
+    't/00-report-prereqs.t',
+    't/01-basic.t',
+    't/02-shadowing.t'
 );
 
 eol_unix_ok($_, { trailing_whitespace => 1 }) foreach @files;
