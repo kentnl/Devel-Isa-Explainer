@@ -30,7 +30,7 @@ use constant 1.03 { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' E<%s#%d>', __PAC
 # These exist for twiddling, but are presently undocumented as their interface
 # is not deemed even remotely stable. Use at own risk.
 
-our @TYPE_METHOD      = qw( cyan );
+our @TYPE_UTIL        = qw( cyan );
 our @TYPE             = qw( yellow );
 our @PRIVATE          = qw( reset );
 our @PUBLIC           = qw( bold bright_green );
@@ -74,7 +74,7 @@ sub _sub_type {
 
 sub _hl_TYPE_UTIL {
   if ( $_[0] =~ /\A([^_]+_)(.*\z)/sx ) {
-    return colored( \@TYPE_METHOD, $1 ) . colored( \@TYPE, $2 );
+    return colored( \@TYPE_UTIL, $1 ) . colored( \@TYPE, $2 );
   }
   return $_[0];
 }
