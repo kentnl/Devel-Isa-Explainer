@@ -1,5 +1,5 @@
 ---
-abstract: 'Pretty Print Function Hierarchies of Classes'
+abstract: 'Pretty Print Hierarchies of Subs in Packages'
 author:
   - 'Kent Fredric <kentnl@cpan.org>'
 build_requires:

@@ -1,14 +1,13 @@
 Devel::Isa::Explainer
 
 This module is a simple tool for quickly visualizing inheritance
-hierarchies to quickly see what functions are available for a given
-class, or to ascertain where a given function you might see in use is
-coming from.
+hierarchies to quickly see what subs are available for a given package,
+or to ascertain where a given sub you might see in use is coming from.
 
 This module does not concern itself with any of the fanciness of Roles,
 and instead, relies entirely on standard Perl5 Object Model
 infrastructure. ( Roles are effectively invisible at run-time as they
-appear as composed functions in the corresponding class )
+appear as composed subs in the corresponding class )
 
 INSTALLATION
 
