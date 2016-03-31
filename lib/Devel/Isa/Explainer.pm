@@ -20,17 +20,17 @@ BEGIN { *import = \&Exporter::import }    ## no critic (ProhibitCallsToUnexporte
 
 our @EXPORT_OK = qw( explain_isa );
 
-use constant 1.03 { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' E<%s#%d>', __PACKAGE__, $_ ), ) } 1 .. 4 };
+use constant 1.03 { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' E<%s#%d>', __PACKAGE__, $_ ), ) } 1 .. 5 };
 
 {
   no strict 'refs';                       # namespace clean
-  delete ${ __PACKAGE__ . q[::] }{ sprintf '_E%x', $_ } for 1 .. 4;
+  delete ${ __PACKAGE__ . q[::] }{ sprintf '_E%x', $_ } for 1 .. 5;
 }
 
 # These exist for twiddling, but are presently undocumented as their interface
 # is not deemed even remotely stable. Use at own risk.
 
-our @TYPE_METHOD      = qw( cyan );
+our @TYPE_UTIL        = qw( cyan );
 our @TYPE             = qw( yellow );
 our @PRIVATE          = qw( reset );
 our @PUBLIC           = qw( bold bright_green );
@@ -74,7 +74,7 @@ sub _sub_type {
 
 sub _hl_TYPE_UTIL {
   if ( $_[0] =~ /\A([^_]+_)(.*\z)/sx ) {
-    return colored( \@TYPE_METHOD, $1 ) . colored( \@TYPE, $2 );
+    return colored( \@TYPE_UTIL, $1 ) . colored( \@TYPE, $2 );
   }
   return $_[0];
 }
@@ -168,8 +168,8 @@ sub _mg_aleph {
 }
 
 sub _pp_subs {
-  my (%subs) = @_;
-  my (@clusters)  = __PACKAGE__->can( '_mg_' . $CLUSTERING )->(%subs);
+  my (%subs)     = @_;
+  my (@clusters) = __PACKAGE__->can( '_mg_' . $CLUSTERING )->(%subs);
   my (@out_clusters);
   for my $cluster (@clusters) {
     my $cluster_out = q[];
@@ -223,8 +223,8 @@ sub _extract_mro {
     if ( not @subs ) {
       push @mro_order,
         {
-        class     => $isa,
-        subs => {},
+        class => $isa,
+        subs  => {},
         };
       next;
     }
@@ -252,9 +252,19 @@ sub _extract_mro {
     }
     push @mro_order,
       {
-      class     => $isa,
-      subs => \%sub_map,
+      class => $isa,
+      subs  => \%sub_map,
       };
+  }
+
+  if ( 1 > @mro_order or ( 1 >= @mro_order and 1 > keys %{ $mro_order[0]->{subs} } ) ) {
+
+    # Huh, No inheritance, and no subs. K.
+    my $module_path = $class;
+    $module_path =~ s{(::|')}{/}g;
+    if ( not exists $INC{ $module_path . '.pm' } ) {
+      croak "No module called $class loaded" . _E5;
+    }
   }
   return \@mro_order;
 }
