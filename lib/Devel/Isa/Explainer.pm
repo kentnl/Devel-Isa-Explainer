@@ -20,6 +20,8 @@ BEGIN { *import = \&Exporter::import }    ## no critic (ProhibitCallsToUnexporte
 
 our @EXPORT_OK = qw( explain_isa );
 
+# Perl critic is broken. This is not a void context.
+## no critic (BuiltinFunctions::ProhibitVoidMap)
 use constant 1.03 ( { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' (id: %s#%d)', __PACKAGE__, $_ ), ) } 1 .. 5 } );
 
 {
