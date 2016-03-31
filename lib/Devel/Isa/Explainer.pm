@@ -360,7 +360,7 @@ or too many ( Which silently ignoring might block us from adding future enhancem
 
 C<explain_isa( $argument )> expects C<$argument> to be a defined module name, but you
 somehow managed to pass C<undef>. I don't I<think> there is a legitimate use case for a
-module whos name is undefined, but I could be wrong.
+module with an undefined name, but I could be wrong.
 
 File a bug if you have proof.
 
@@ -381,7 +381,7 @@ This is presently an error to protect it for future possible use.
 
 When trying to extract subs and inheritance from the module name you passed in
 C<explain_isa( $module_name )>, no C<sub>s could be found, there were no parent classes,
-and the module name in question had never been registered in C<%INC> by perl.
+and the module name in question had never been registered in C<%INC> by Perl.
 
 This indicates that the most likely thing that happened was you forgot to either C<require>
 the module in question first, or you forgot to locally define that package with some classes
