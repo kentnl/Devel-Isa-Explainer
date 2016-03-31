@@ -14,7 +14,7 @@ use Module::Load qw( load );
 use Carp qw( croak );
 use Devel::Isa::Explainer qw( explain_isa );
 
-use constant 1.03 { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' E<%s#%d>', __PACKAGE__, $_ ) ) } 1 .. 2 };
+use constant 1.03 ( { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' E<%s#%d>', __PACKAGE__, $_ ) ) } 1 .. 2 } );
 
 {
   no strict 'refs';    # namespace clean
