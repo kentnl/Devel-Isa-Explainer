@@ -6,7 +6,7 @@ use warnings;
 package # Hideme
   App::Isa::Splain::_Script;
 
-our $VERSION = '0.001000';
+our $VERSION = '0.001001';
 
 # AUTHORITY
 
