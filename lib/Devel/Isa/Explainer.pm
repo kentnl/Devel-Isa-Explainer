@@ -261,7 +261,7 @@ sub _extract_mro {
 
     # Huh, No inheritance, and no subs. K.
     my $module_path = $class;
-    $module_path =~ s{(::|')}{/}g;
+    $module_path =~ s{ (::|') }{/}sgx;
     if ( not exists $INC{ $module_path . '.pm' } ) {
       croak "No module called $class loaded" . _E5;
     }
