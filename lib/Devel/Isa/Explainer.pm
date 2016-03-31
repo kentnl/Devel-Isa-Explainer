@@ -10,17 +10,17 @@ our $VERSION = '0.001000';
 
 our $AUTHORITY = 'cpan:KENTNL'; # AUTHORITY
 
-use Exporter        ();
-use Term::ANSIColor ('colored');
-use Carp            ('croak');
-use Package::Stash  ();
-use MRO::Compat     ();
+use Exporter ();
+use Term::ANSIColor 3.00 ('colored');    # bright_
+use Carp           ('croak');
+use Package::Stash ();
+use MRO::Compat    ();
 
 BEGIN { *import = \&Exporter::import }    ## no critic (ProhibitCallsToUnexportedSubs)
 
 our @EXPORT_OK = qw( explain_isa );
 
-use constant 1.03 +{ map { ( ( sprintf '_E%x', $_ ), ( sprintf ' (id: %s#%d)', __PACKAGE__, $_ ), ) } 1 .. 5 };
+use constant 1.03 ( { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' (id: %s#%d)', __PACKAGE__, $_ ), ) } 1 .. 5 } );
 
 {
   no strict 'refs';                       # namespace clean

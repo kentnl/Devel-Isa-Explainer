@@ -25,8 +25,8 @@ my %WriteMakefileArgs = (
     "MRO::Compat" => 0,
     "Module::Load" => 0,
     "Package::Stash" => 0,
-    "Term::ANSIColor" => 0,
-    "constant" => 0,
+    "Term::ANSIColor" => "3.00",
+    "constant" => "1.03",
     "strict" => 0,
     "warnings" => 0
   },
@@ -51,10 +51,10 @@ my %FallbackPrereqs = (
   "MRO::Compat" => 0,
   "Module::Load" => 0,
   "Package::Stash" => 0,
-  "Term::ANSIColor" => 0,
+  "Term::ANSIColor" => "3.00",
   "Test::Builder" => 0,
   "Test::More" => "0.89",
-  "constant" => 0,
+  "constant" => "1.03",
   "strict" => 0,
   "warnings" => 0
 );
