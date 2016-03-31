@@ -363,7 +363,7 @@ C<explain_isa()> expects exactly one argument, a (loaded) module name to print
 the C<ISA> hierarchy of. You passed either 0 arguments ( too few to be useful )
 or too many ( Which silently ignoring might block us from adding future enhancements )
 
-=item * C<< (id: Devel::Isa::Explainer#2) >>X<< (id: Devel::Isa::Explainer#2) >>
+=item * C<< (id: Devel::Isa::Explainer#2) >>
 
 C<explain_isa( $argument )> expects C<$argument> to be a defined module name, but you
 somehow managed to pass C<undef>. I don't I<think> there is a legitimate use case for a
