@@ -26,7 +26,7 @@ my %WriteMakefileArgs = (
     "Module::Load" => 0,
     "Package::Stash" => 0,
     "Term::ANSIColor" => 0,
-    "constant" => "1.03",
+    "constant" => 0,
     "strict" => 0,
     "warnings" => 0
   },
@@ -54,7 +54,7 @@ my %FallbackPrereqs = (
   "Term::ANSIColor" => 0,
   "Test::Builder" => 0,
   "Test::More" => "0.89",
-  "constant" => "1.03",
+  "constant" => 0,
   "strict" => 0,
   "warnings" => 0
 );
