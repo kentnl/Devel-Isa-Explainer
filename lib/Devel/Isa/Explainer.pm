@@ -20,11 +20,11 @@ BEGIN { *import = \&Exporter::import }    ## no critic (ProhibitCallsToUnexporte
 
 our @EXPORT_OK = qw( explain_isa );
 
-use constant 1.03 { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' E<%s#%d>', __PACKAGE__, $_ ), ) } 1 .. 4 };
+use constant 1.03 { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' E<%s#%d>', __PACKAGE__, $_ ), ) } 1 .. 5 };
 
 {
   no strict 'refs';                       # namespace clean
-  delete ${ __PACKAGE__ . q[::] }{ sprintf '_E%x', $_ } for 1 .. 4;
+  delete ${ __PACKAGE__ . q[::] }{ sprintf '_E%x', $_ } for 1 .. 5;
 }
 
 # These exist for twiddling, but are presently undocumented as their interface
@@ -255,6 +255,16 @@ sub _extract_mro {
       class => $isa,
       subs  => \%sub_map,
       };
+  }
+
+  if ( 1 > @mro_order or ( 1 >= @mro_order and 1 > keys %{ $mro_order[0]->{subs} } ) ) {
+
+    # Huh, No inheritance, and no subs. K.
+    my $module_path = $class;
+    $module_path =~ s{ (::|') }{/}sgx;
+    if ( not exists $INC{ $module_path . '.pm' } ) {
+      croak "No module called $class loaded" . _E5;
+    }
   }
   return \@mro_order;
 }
