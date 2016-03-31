@@ -18,7 +18,7 @@ use Path::Tiny qw(path);
 my $bundle = create_bundle('Example::Author::KENTNL');
 $bundle->configure;
 
-my @stopwords = (qw( explainer Explainer interoperability DIAGNOSTICS ));
+my @stopwords = (qw( explainer Explainer interoperability ));
 for my $wordlist (@stopwords) {
   $bundle->add_or_append_policy_field( 'Documentation::PodSpelling' => ( 'stop_words' => $wordlist ) );
 }

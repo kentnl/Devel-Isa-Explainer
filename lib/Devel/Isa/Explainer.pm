@@ -346,7 +346,7 @@ call will get routed on the relevant class.
 
 Returns a pretty-printed formatted description of the class referenced by C<$loaded_module_name>
 
-=head1 DIAGNOSITCS
+=head1 DIAGNOSTICS
 
 =over 4
 
