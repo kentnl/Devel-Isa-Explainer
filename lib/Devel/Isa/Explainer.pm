@@ -4,7 +4,7 @@ use warnings;
 
 package Devel::Isa::Explainer;
 
-our $VERSION = '0.001000';
+our $VERSION = '0.001001';
 
 # ABSTRACT: Pretty Print Hierarchies of Subs in Packages
 
@@ -290,7 +290,7 @@ Devel::Isa::Explainer - Pretty Print Hierarchies of Subs in Packages
 
 =head1 VERSION
 
-version 0.001000
+version 0.001001
 
 =head1 SYNOPSIS
 
@@ -355,15 +355,13 @@ Returns a pretty-printed formatted description of the class referenced by C<$loa
 
 =head1 DIAGNOSTICS
 
-=over 4
-
-=item * C<< (id: Devel::Isa::Explainer#1) >>
+=head4 C<< (id: Devel::Isa::Explainer#1) >>
 
 C<explain_isa()> expects exactly one argument, a (loaded) module name to print
 the C<ISA> hierarchy of. You passed either 0 arguments ( too few to be useful )
 or too many ( Which silently ignoring might block us from adding future enhancements )
 
-=item * C<< (id: Devel::Isa::Explainer#2) >>
+=head4 C<< (id: Devel::Isa::Explainer#2) >>
 
 C<explain_isa( $argument )> expects C<$argument> to be a defined module name, but you
 somehow managed to pass C<undef>. I don't I<think> there is a legitimate use case for a
@@ -371,20 +369,20 @@ module with an undefined name, but I could be wrong.
 
 File a bug if you have proof.
 
-=item * C<< (id: Devel::Isa::Explainer#3) >>
+=head4 C<< (id: Devel::Isa::Explainer#3) >>
 
 C<explain_isa( $argument )> expects C<$argument> to have a positive length, but you passed
-an empty string. Again as with L<< |/(id: Devel::Isa::Explainer#2) >>, file a bug if there's a
+an empty string. Again as with L<< C<(id: Devel::Isa::Explainer#2)>|/(id: Devel::Isa::Explainer#2) >>, file a bug if there's a
 real use case here that I missed.
 
-=item * C<< (id: Devel::Isa::Explainer#4) >>
+=head4 C<< (id: Devel::Isa::Explainer#4) >>
 
 C<explain_isa( $argument )> expects C<$argument> to be a normal scalar value describing
-a module name, but you passed a reference of some passed some kind.
+a module name, but you passed a reference of some kind.
 
 This is presently an error to protect it for future possible use.
 
-=item * C<< (id: Devel::Isa::Explainer#5) >>
+=head4 C<< (id: Devel::Isa::Explainer#5) >>
 
 When trying to extract subs and inheritance from the module name you passed in
 C<explain_isa( $module_name )>, no C<sub>s could be found, there were no parent classes,
@@ -393,8 +391,6 @@ and the module name in question had never been registered in C<%INC> by Perl.
 This indicates that the most likely thing that happened was you forgot to either C<require>
 the module in question first, or you forgot to locally define that package with some classes
 prior to calling C<explain_isa( $module_name )>
-
-=back
 
 =head1 AUTHOR
 
