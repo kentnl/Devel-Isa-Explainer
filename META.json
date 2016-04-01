@@ -128,11 +128,11 @@
    "provides" : {
       "App::Isa::Splain" : {
          "file" : "lib/App/Isa/Splain.pm",
-         "version" : "0.001001"
+         "version" : "0.001002"
       },
       "Devel::Isa::Explainer" : {
          "file" : "lib/Devel/Isa/Explainer.pm",
-         "version" : "0.001001"
+         "version" : "0.001002"
       }
    },
    "release_status" : "stable",
@@ -147,7 +147,7 @@
          "web" : "https://github.com/kentnl/Devel-Isa-Explainer"
       }
    },
-   "version" : "0.001001",
+   "version" : "0.001002",
    "x_BuiltWith" : {
       "external_file" : "misc/built_with.json"
    },
@@ -652,7 +652,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "0.001001-source",
+                  "tag" : "0.001002-source",
                   "tag_format" : "%v-source",
                   "tag_message" : "v%v"
                },
@@ -743,7 +743,7 @@
                   "branch" : "releases",
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "0.001001",
+                  "tag" : "0.001002",
                   "tag_format" : "%v",
                   "tag_message" : "v%v"
                },
