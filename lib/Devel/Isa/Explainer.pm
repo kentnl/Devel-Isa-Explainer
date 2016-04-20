@@ -46,6 +46,7 @@ our $INDENT          = q[ ] x 4;
 our $SUFFIX_START    = q{(};
 our $SUFFIX_STOP     = q{)};
 our $SHADOW_SUFFIX   = q{^};
+our $CONSTANT_SUFFIX = q{};                # TBD
 our $XSUB_SUFFIX     = q{};                # TBD
 our $SHADOWED_SUFFIX = q{};                # TBD
 our $CLUSTERING      = 'type_clustered';
@@ -89,6 +90,7 @@ sub _hl_suffix {
   $suffix_flags .= $SHADOW_SUFFIX   if $_[1]->{shadowing};
   $suffix_flags .= $SHADOWED_SUFFIX if $_[1]->{shadowed};
   $suffix_flags .= $XSUB_SUFFIX     if $_[1]->{xsub};
+  $suffix_flags .= $CONSTANT_SUFFIX if $_[1]->{constant};
 
   return colored( $_[0], $SUFFIX_START . $suffix_flags . $SUFFIX_STOP )
     if length $suffix_flags and ( $_[1]->{shadowing} or $_[1]->{shadowed} );
