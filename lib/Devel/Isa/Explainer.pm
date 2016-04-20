@@ -132,6 +132,15 @@ sub _pp_key {
     push @tokens, 'Private/Boring Sub another and shadowed itself: '
       . _hl_PRIVATE( 'shadowing_shadowed_example', { shadowed => 1, shadowing => 1 } );
   }
+  my @suffixes;
+  if ($SHOW_SHADOWED) {
+    push @suffixes, 'shadowing=' . _hl_suffix( ['reset'], { shadowing => 1 } ) if length $SHADOWING_SUFFIX;
+    push @suffixes, 'shadowed=' . _hl_suffix( ['reset'], { shadowed => 1 } ) if length $SHADOWED_SUFFIX;
+  }
+  push @suffixes, 'xsub=' . _hl_suffix( ['reset'], { xsub => 1 } ) if length $XSUB_SUFFIX;
+  push @suffixes, 'constant=' . _hl_suffix( ['reset'], { constant => 1 } ) if length $CONSTANT_SUFFIX;
+
+  push @tokens, 'Suffixes: ' . join q[, ], @suffixes if @suffixes;
   push @tokens, 'No Subs: ()';
   return sprintf "Key:\n$INDENT%s\n\n", join qq[\n$INDENT], @tokens;
 }
