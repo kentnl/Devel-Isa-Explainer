@@ -43,7 +43,10 @@ our @SHADOWED_PUBLIC  = qw( red );
 our $MAX_WIDTH       = 80;
 our $SHOW_SHADOWED   = 1;
 our $INDENT          = q[ ] x 4;
-our $SHADOW_SUFFIX   = q{(^)};
+our $SUFFIX_START    = q{(};
+our $SUFFIX_STOP     = q{)};
+our $SHADOW_SUFFIX   = q{^};
+our $XSUB_SUFFIX     = q{};                # TBD
 our $SHADOWED_SUFFIX = q{};                # TBD
 our $CLUSTERING      = 'type_clustered';
 
@@ -82,8 +85,15 @@ sub _hl_TYPE_UTIL {
 }
 
 sub _hl_suffix {
-  return colored( $_[0], $SHADOW_SUFFIX )   if $_[1]->{shadowing};
-  return colored( $_[0], $SHADOWED_SUFFIX ) if $_[1]->{shadowed};
+  my ($suffix_flags) = q[];
+  $suffix_flags .= $SHADOW_SUFFIX   if $_[1]->{shadowing};
+  $suffix_flags .= $SHADOWED_SUFFIX if $_[1]->{shadowed};
+  $suffix_flags .= $XSUB_SUFFIX     if $_[1]->{xsub};
+
+  return colored( $_[0], $SUFFIX_START . $suffix_flags . $SUFFIX_STOP )
+    if length $suffix_flags and ( $_[1]->{shadowing} or $_[1]->{shadowed} );
+  return $SUFFIX_START . $suffix_flags . $SUFFIX_STOP if length $suffix_flags;
+
   return q[];
 }
 
