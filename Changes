@@ -1,6 +1,6 @@
 Release history for Devel-Symdump-Compact
 
-0.001002 2016-04-20T03:51:31Z 2187468
+0.001002 2016-04-20T23:21:25Z 4f76e84
  [Internals]
  - factored out _class_subs function
 
