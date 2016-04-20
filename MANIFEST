@@ -32,6 +32,7 @@ t/00-report-prereqs.t
 t/01-basic.t
 t/02-shadowing.t
 t/cli/basic.t
+t/cli/dash-m.t
 weaver.ini
 xt/author/critic.t
 xt/author/eol.t
