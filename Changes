@@ -1,6 +1,9 @@
 Release history for Devel-Symdump-Compact
 
 {{$NEXT}}
+ - isa-splain now accepts -M parameter to explicitly specify modules to load. This is helpful in handling cases where
+   one module inlines others, ( B -> B::CV ) or a module can't be loaded on its own ( Class::MOP::Class )
+
  [Internals]
  - factored out _class_subs function
 
