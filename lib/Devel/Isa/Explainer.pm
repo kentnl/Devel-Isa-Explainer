@@ -78,21 +78,21 @@ sub _hl_TYPE_UTIL {
 }
 
 sub _hl_suffix {
-  return colored( $_[0], $SHADOW_SUFFIX )   if $_[2];
-  return colored( $_[0], $SHADOWED_SUFFIX ) if $_[1];
+  return colored( $_[0], $SHADOW_SUFFIX )   if $_[1]->{shadowing};
+  return colored( $_[0], $SHADOWED_SUFFIX ) if $_[1]->{shadowed};
   return q[];
 }
 
 sub _hl_TYPE { return colored( \@TYPE, $_[0] ) }
 
 sub _hl_PUBLIC {
-  return ( $_[1] ? colored( \@SHADOWED_PUBLIC, $_[0] ) : colored( \@PUBLIC, $_[0] ) )
-    . _hl_suffix( \@SHADOWED_PUBLIC, $_[1], $_[2] );
+  return ( $_[1]->{shadowed} ? colored( \@SHADOWED_PUBLIC, $_[0] ) : colored( \@PUBLIC, $_[0] ) )
+    . _hl_suffix( \@SHADOWED_PUBLIC, $_[1] );
 }
 
 sub _hl_PRIVATE {
-  return ( $_[1] ? colored( \@SHADOWED_PRIVATE, $_[0] ) : colored( \@PRIVATE, $_[0] ) )
-    . _hl_suffix( \@SHADOWED_PRIVATE, $_[1], $_[2] );
+  return ( $_[1]->{shadowed} ? colored( \@SHADOWED_PRIVATE, $_[0] ) : colored( \@PRIVATE, $_[0] ) )
+    . _hl_suffix( \@SHADOWED_PRIVATE, $_[1] );
 }
 
 sub _pp_sub {
@@ -106,13 +106,15 @@ sub _pp_key {
   push @tokens, 'Type Constraint Utility: ' . _hl_TYPE_UTIL('typeop_TypeName');
   push @tokens, 'Private/Boring Sub: ' . _hl_PRIVATE('foo_example');
   if ($SHOW_SHADOWED) {
-    push @tokens, 'Public Sub shadowing another: ' . _hl_PUBLIC( 'shadowing_example', 0, 1 );
-    push @tokens, 'Public Sub shadowed by higher scope: ' . _hl_PUBLIC( 'shadowed_example', 1 );
-    push @tokens, 'Public Sub shadowing another and shadowed itself: ' . _hl_PUBLIC( 'shadowed_shadowing_example', 1, 1 );
+    push @tokens, 'Public Sub shadowing another: ' . _hl_PUBLIC( 'shadowing_example', { shadowing => 1 } );
+    push @tokens, 'Public Sub shadowed by higher scope: ' . _hl_PUBLIC( 'shadowed_example', { shadowed => 1 } );
+    push @tokens, 'Public Sub shadowing another and shadowed itself: '
+      . _hl_PUBLIC( 'shadowed_shadowing_example', { shadowing => 1, shadowed => 1 } );
 
-    push @tokens, 'Private/Boring Sub shadowing another: ' . _hl_PRIVATE( 'shadowing_example', 0, 1 );
-    push @tokens, 'Private/Boring Sub shadowed by higher scope: ' . _hl_PRIVATE( 'shadowed_example', 1 );
-    push @tokens, 'Private/Boring Sub another and shadowed itself: ' . _hl_PRIVATE( 'shadowing_shadowed_example', 1, 1 );
+    push @tokens, 'Private/Boring Sub shadowing another: ' . _hl_PRIVATE( 'shadowing_example', { shadowing => 1 } );
+    push @tokens, 'Private/Boring Sub shadowed by higher scope: ' . _hl_PRIVATE( 'shadowed_example', { shadowed => 1 } );
+    push @tokens, 'Private/Boring Sub another and shadowed itself: '
+      . _hl_PRIVATE( 'shadowing_shadowed_example', { shadowed => 1, shadowing => 1 } );
   }
   push @tokens, 'No Subs: ()';
   return sprintf "Key:\n$INDENT%s\n\n", join qq[\n$INDENT], @tokens;
@@ -189,7 +191,7 @@ sub _pp_subs {
 
     # Suck up trailing ,
     $cluster_out =~ s/,[ ]\n\z/\n/sx;
-    $cluster_out =~ s{(\w+)}{ _pp_sub($1, $subs{$1}->{shadowed}, $subs{$1}->{shadowing} ) }gsex;
+    $cluster_out =~ s{(\w+)}{ _pp_sub($1, $subs{$1} ) }gsex;
     push @out_clusters, $cluster_out;
   }
   return join qq[\n], @out_clusters;
