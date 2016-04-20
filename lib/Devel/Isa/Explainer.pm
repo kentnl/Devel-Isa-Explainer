@@ -203,7 +203,7 @@ sub _pp_class {
   my $mro_order = _extract_mro($class);
   for my $mro_entry ( @{$mro_order} ) {
     $out .= colored( ['green'], $mro_entry->{class} ) . q[:];
-    my (%subs) = %{ $mro_entry->{subs} };
+    my (%subs) = %{ $mro_entry->{subs} || {} };
     if ( not keys %subs ) {
       $out .= " ()\n";
       next;
@@ -217,51 +217,58 @@ sub _pp_class {
 }
 
 sub _extract_mro {
-  my ($class) = @_;
-  my (@mro_order);
+  my ($class)     = @_;
   my ($seen_subs) = {};
 
-  # Walk down finding shadowing
-  ## no critic (ProhibitCallstoUnexportedSubs)
-  for my $isa ( @{ mro::get_linear_isa($class) } ) {
-    my $stash = Package::Stash->new($isa);
-    my (@subs) = $stash->list_all_symbols('CODE');
-    if ( not @subs ) {
-      push @mro_order,
-        {
-        class => $isa,
-        subs  => {},
-        };
-      next;
-    }
-    my %sub_map;
-    for my $sub (@subs) {
-      $sub_map{$sub} = {
-        shadowed  => 0,
-        shadowing => 0,
-      };
+  ## no critic (ProhibitCallsToUnexportedSubs)
+  my (@isa) = @{ mro::get_linear_isa($class) };
 
-      # The first incarnation of a sub shadows the rest.
-      if ( not exists $seen_subs->{$sub} ) {
-        $seen_subs->{$sub} = $isa;
-      }
+  # Discover all subs and compute full MRO every time a new sub-name
+  # is found
+  for my $isa (@isa) {
+    for my $sub ( Package::Stash->new($isa)->list_all_symbols('CODE') ) {
+      next if exists $seen_subs->{$sub};
 
-      # If we are shadowed, mark ourselves shadowed,
-      # and mark all children as shadowers
-      if ( $seen_subs->{$sub} ne $isa ) {
-        $sub_map{$sub}->{shadowed} = 1;
-        for my $child_class (@mro_order) {
-          next unless exists $child_class->{subs}->{$sub};
-          $child_class->{subs}->{$sub}->{shadowing} = 1;
+      # Compute the full sub->package MRO table bottom up
+
+      $seen_subs->{$sub} = [];
+      my $currently_visible;
+      for my $class ( reverse @isa ) {
+        my $coderef = $class->can($sub) or next;
+
+        # Record the frame where the first new instance is seen.
+        if ( not defined $currently_visible or $currently_visible != $coderef ) {
+          unshift @{ $seen_subs->{$sub} }, $class;    # note: we're working bottom-up
+          $currently_visible = $coderef;
+          next;
         }
       }
     }
-    push @mro_order,
-      {
-      class => $isa,
-      subs  => \%sub_map,
-      };
   }
+
+  my $class_data = {};
+
+  # Group "seen subs" into class oriented structures,
+  # and classify them.
+  for my $sub ( keys %{$seen_subs} ) {
+    my @classes = @{ $seen_subs->{$sub} };
+
+    for my $isa ( @{ $seen_subs->{$sub} } ) {
+
+      # mark all subs both shadowing and shadowed until proven otherwise
+      $class_data->{$isa}->{$sub} = { shadowed => 1, shadowing => 1 };
+    }
+
+    # mark top-most sub unshadowed
+    $class_data->{ $classes[0] }->{$sub}->{shadowed} = 0;
+
+    # mark bottom-most sub unshadowing
+    $class_data->{ $classes[-1] }->{$sub}->{shadowing} = 0;
+
+  }
+
+  # Order class structures by MRO order
+  my (@mro_order) = map { { class => $_, subs => $class_data->{$_} || {} } } @isa;
 
   if ( 1 > @mro_order or ( 1 >= @mro_order and 1 > keys %{ $mro_order[0]->{subs} } ) ) {
 
