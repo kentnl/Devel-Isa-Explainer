@@ -58,7 +58,7 @@
       "Dist::Zilla::PluginBundle::Author::KENTNL" : "2.025010",
       "English" : "1.09",
       "Exporter" : "5.72",
-      "ExtUtils::MakeMaker" : "7.04_01",
+      "ExtUtils::MakeMaker" : "7.11_06",
       "File::Spec" : "3.56",
       "MRO::Compat" : "0.12",
       "Module::Load" : "0.32",

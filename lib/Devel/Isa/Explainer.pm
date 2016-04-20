@@ -64,8 +64,6 @@ sub explain_isa {
 }
 
 # -- no user servicable parts --
-sub _class_subs { return Package::Stash->new( $_[0] )->list_all_symbols('CODE') }
-
 sub _sub_type {
   my ($sub) = @_;
   return 'PRIVATE'   if $sub =~ /\A_/sx;
@@ -226,7 +224,8 @@ sub _extract_mro {
   # Walk down finding shadowing
   ## no critic (ProhibitCallstoUnexportedSubs)
   for my $isa ( @{ mro::get_linear_isa($class) } ) {
-    my (@subs) = _class_subs($isa);
+    my $stash = Package::Stash->new($isa);
+    my (@subs) = $stash->list_all_symbols('CODE');
     if ( not @subs ) {
       push @mro_order,
         {
