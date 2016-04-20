@@ -1,6 +1,8 @@
 Release history for Devel-Symdump-Compact
 
 {{$NEXT}}
+ [Internals]
+ - factored out _class_subs function
 
 0.001001 2016-04-01T09:31:35Z ab66fba
  - Minor documentation fixes.
