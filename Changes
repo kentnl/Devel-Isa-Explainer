@@ -4,6 +4,10 @@ Release history for Devel-Symdump-Compact
  - isa-splain now accepts -M parameter to explicitly specify modules to load. This is helpful in handling cases where
    one module inlines others, ( B -> B::CV ) or a module can't be loaded on its own ( Class::MOP::Class )
 
+ [Dependencies::Stats]
+ - Dependencies changed since 0.001001, see misc/*.deps* for details
+ - develop: +1
+
  [Internals]
  - factored out _class_subs function
  - Method Resolution mechanics reworked to more closely reflect how perl-itself views methods. This will reduce certain
