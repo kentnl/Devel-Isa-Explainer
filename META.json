@@ -106,6 +106,7 @@
             "Package::Stash" : "0",
             "Term::ANSIColor" : "3.00",
             "constant" : "1.03",
+            "namespace::clean" : "0",
             "perl" : "5.006",
             "strict" : "0",
             "warnings" : "0"
