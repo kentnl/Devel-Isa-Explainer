@@ -45,3 +45,4 @@ xt/release/kwalitee.t
 xt/release/minimum-version.t
 xt/smoke/example-class-mop-module.t
 xt/smoke/example-moose-meta-class.t
+xt/smoke/example-statocles-app-blog.t

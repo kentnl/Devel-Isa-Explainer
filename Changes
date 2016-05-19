@@ -1,6 +1,6 @@
 Release history for Devel-Symdump-Compact
 
-0.001002 2016-05-19T11:51:41Z a9aa988
+0.001002 2016-05-19T11:52:01Z e106886
  - isa-splain now accepts -M parameter to explicitly specify modules to load. This is helpful in handling cases where
    one module inlines others, ( B -> B::CV ) or a module can't be loaded on its own ( Class::MOP::Class )
 
