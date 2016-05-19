@@ -72,6 +72,7 @@
       "Test::EOL" : "1.6",
       "Test::Kwalitee" : "1.22",
       "Test::More" : "1.001014",
+      "Test::Needs" : "0.002000",
       "Test::Pod" : "1.51",
       "Test::Pod::Coverage" : "1.10",
       "constant" : "1.33",

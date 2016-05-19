@@ -43,3 +43,4 @@ xt/release/cpan-changes.t
 xt/release/distmeta.t
 xt/release/kwalitee.t
 xt/release/minimum-version.t
+xt/smoke/example-moose-meta-class.t
