@@ -1,3 +1,7 @@
 This file contains changes in REQUIRED dependencies for standard CPAN phases (configure/build/runtime/test)
 
-0.001001
+0.002000
+ [Added / runtime requires]
+ - namespace::clean
+
+0.001001 2016-04-01T09:31:35Z

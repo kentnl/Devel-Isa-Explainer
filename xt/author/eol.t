@@ -15,7 +15,11 @@ my @files = (
     't/00-report-prereqs.dd',
     't/00-report-prereqs.t',
     't/01-basic.t',
-    't/02-shadowing.t'
+    't/02-shadowing.t',
+    't/cli/basic.t',
+    't/cli/dash-m.t',
+    't/internals/02-isacache-hide.t',
+    't/internals/max-width.t'
 );
 
 eol_unix_ok($_, { trailing_whitespace => 1 }) foreach @files;

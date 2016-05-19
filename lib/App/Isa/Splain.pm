@@ -4,7 +4,7 @@ use warnings;
 
 package App::Isa::Splain;
 
-our $VERSION = '0.001001';
+our $VERSION = '0.002000';
 
 our $AUTHORITY = 'cpan:KENTNL'; # AUTHORITY
 
@@ -16,11 +16,11 @@ use Devel::Isa::Explainer qw( explain_isa );
 
 # Perl critic is broken. This is not a void context.
 ## no critic (BuiltinFunctions::ProhibitVoidMap)
-use constant 1.03 ( { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' E<%s#%d>', __PACKAGE__, $_ ) ) } 1 .. 2 } );
+use constant 1.03 ( { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' E<%s#%d>', __PACKAGE__, $_ ) ) } 1 .. 3 } );
 
 {
   no strict 'refs';    # namespace clean
-  delete ${ __PACKAGE__ . q[::] }{ sprintf '_E%x', $_ } for 1 .. 2;
+  delete ${ __PACKAGE__ . q[::] }{ sprintf '_E%x', $_ } for 1 .. 3;
 }
 
 
@@ -52,11 +52,25 @@ sub new {
 
 sub new_from_ARGV {
   my (@args) = defined $_[1] ? @{ $_[1] } : @ARGV;
-  my $module = shift @args;
+  my $module;
+  my @load_modules;
+  while ( @args ) {
+    my $argument = shift @args;
+    if ( not defined $module and $argument !~ /\A-/sx ) {
+      $module = $argument;
+      next;
+    }
+    if( $argument =~ /\A-M(.*)\z/sx ) {
+      push @load_modules, $1;
+      next;
+    }
+    croak 'Unexpected argument ' . $argument . _E3;
+  }
   defined $module or croak 'Expected a module name, got none' . _E1;
-  return $_[0]->new( module => $module, );
+  return $_[0]->new( module => $module, load_modules => [ @load_modules ? @load_modules : $module ] );
 }
 
+sub _load_modules { return @{ $_[0]->{load_modules} } }
 sub _module { return $_[0]->{module} }
 sub _output { return ( $_[0]->{output} || *STDOUT ) }
 
@@ -68,7 +82,7 @@ sub _output { return ( $_[0]->{output} || *STDOUT ) }
 
 sub run {
   my ($self) = @_;
-  load $self->_module;
+  load $_ for $self->_load_modules;
   croak "Could not print to output handle: $! $^E" . _E2
     unless print { $self->_output } explain_isa( $self->_module );
 
@@ -89,7 +103,7 @@ App::Isa::Splain - Visualize Module Hierarchies on the command line
 
 =head1 VERSION
 
-version 0.001001
+version 0.002000
 
 =head1 SYNOPSIS
 
@@ -123,13 +137,22 @@ Executes the explainer and prints its output.
 
 =head1 COMMAND LINE ARGUMENTS
 
-  isa-splain Module::Name
+  isa-splain [-MModule::Name] Module::Name
 
 =over 4
 
 =item * C<Module::Name>
 
 A module to C<require> and analyze the C<ISA> of.
+
+=item * C<-MI<Module::Name>>
+
+A module to load instead of the module being analyzed, for example:
+
+  isa-splain -MB B::CV
+  isa-splain -Moose Class::MOP::Class
+
+Helpful for cases where simple C<isa-splain Module::Name> causes problems.
 
 =back
 
