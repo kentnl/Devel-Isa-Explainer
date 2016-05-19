@@ -1,6 +1,9 @@
 Release history for Devel-Isa-Explainer
 
-0.002001 2016-05-19T14:06:41Z 0edaa88
+0.002001 2016-05-19T14:07:12Z c167598
+ [Documentation]
+ - Reference updated screenshots.
+
  [Internals]
  - use namespace::clean in a few more places.
 
