@@ -179,9 +179,10 @@ sub _pp_subs {
     my @subs = @{$cluster};
     while (@subs) {
       my $line = $INDENT;
-      while ( @subs and length $line < $MAX_WIDTH ) {
+    flowcontrol: {
         my $sub = shift @subs;
         $line .= $sub . q[, ];
+        redo flowcontrol if @subs and length $line < $MAX_WIDTH;
       }
       $cluster_out .= "$line\n";
     }
