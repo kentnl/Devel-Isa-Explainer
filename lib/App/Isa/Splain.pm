@@ -4,7 +4,7 @@ use warnings;
 
 package App::Isa::Splain;
 
-our $VERSION = '0.002000';
+our $VERSION = '0.002001';
 
 our $AUTHORITY = 'cpan:KENTNL'; # AUTHORITY
 
@@ -18,10 +18,7 @@ use Devel::Isa::Explainer qw( explain_isa );
 ## no critic (BuiltinFunctions::ProhibitVoidMap)
 use constant 1.03 ( { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' E<%s#%d>', __PACKAGE__, $_ ) ) } 1 .. 3 } );
 
-{
-  no strict 'refs';    # namespace clean
-  delete ${ __PACKAGE__ . q[::] }{ sprintf '_E%x', $_ } for 1 .. 3;
-}
+use namespace::clean;
 
 
 
@@ -103,14 +100,14 @@ App::Isa::Splain - Visualize Module Hierarchies on the command line
 
 =head1 VERSION
 
-version 0.002000
+version 0.002001
 
 =head1 SYNOPSIS
 
   my $instance = App::Isa::Splain->new_from_ARGV;
   $instance->run;
 
-=for html <center><img alt="Colorised output from a Moose::Meta::Class" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/0/c1.png" width="820" height="559" /></center>
+=for html <center><img alt="Colorised output from a Moose::Meta::Class" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/1/c1.png" width="820" height="559" /></center>
 
 =head1 METHODS
 
