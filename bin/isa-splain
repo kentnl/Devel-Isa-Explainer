@@ -6,7 +6,7 @@ use warnings;
 package # Hideme
   App::Isa::Splain::_Script;
 
-our $VERSION = '0.001002';
+our $VERSION = '0.002000';
 
 our $AUTHORITY = 'cpan:KENTNL'; # AUTHORITY
 
@@ -28,7 +28,7 @@ App::Isa::Splain::_Script - Visualize Module Hierarchies on the command line
 
 =head1 VERSION
 
-version 0.001002
+version 0.002000
 
 =head1 DESCRIPTION
 

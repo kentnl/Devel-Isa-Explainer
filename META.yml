@@ -21,10 +21,10 @@ name: Devel-Isa-Explainer
 provides:
   App::Isa::Splain:
     file: lib/App/Isa/Splain.pm
-    version: '0.001002'
+    version: '0.002000'
   Devel::Isa::Explainer:
     file: lib/Devel/Isa/Explainer.pm
-    version: '0.001002'
+    version: '0.002000'
 requires:
   Carp: '0'
   Exporter: '0'
@@ -41,4 +41,4 @@ resources:
   bugtracker: https://github.com/kentnl/Devel-Isa-Explainer/issues
   homepage: https://github.com/kentnl/Devel-Isa-Explainer
   repository: https://github.com/kentnl/Devel-Isa-Explainer.git
-version: '0.001002'
+version: '0.002000'
