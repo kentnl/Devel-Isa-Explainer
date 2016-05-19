@@ -1,5 +1,7 @@
 Release history for Devel-Isa-Explainer
 
+0.002001 2016-05-19T12:33:33Z f709129
+
 0.002000 2016-05-19T12:30:00Z 6c368ff
  - isa-splain now accepts -M parameter to explicitly specify modules to load. This is helpful in handling cases where
    one module inlines others, ( B -> B::CV ) or a module can't be loaded on its own ( Class::MOP::Class )

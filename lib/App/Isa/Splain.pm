@@ -4,7 +4,7 @@ use warnings;
 
 package App::Isa::Splain;
 
-our $VERSION = '0.002000';
+our $VERSION = '0.002001';
 
 our $AUTHORITY = 'cpan:KENTNL'; # AUTHORITY
 
@@ -103,7 +103,7 @@ App::Isa::Splain - Visualize Module Hierarchies on the command line
 
 =head1 VERSION
 
-version 0.002000
+version 0.002001
 
 =head1 SYNOPSIS
 
