@@ -18,10 +18,7 @@ use Devel::Isa::Explainer qw( explain_isa );
 ## no critic (BuiltinFunctions::ProhibitVoidMap)
 use constant 1.03 ( { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' E<%s#%d>', __PACKAGE__, $_ ) ) } 1 .. 3 } );
 
-{
-  no strict 'refs';    # namespace clean
-  delete ${ __PACKAGE__ . q[::] }{ sprintf '_E%x', $_ } for 1 .. 3;
-}
+use namespace::clean;
 
 
 
