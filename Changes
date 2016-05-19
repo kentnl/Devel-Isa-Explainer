@@ -1,6 +1,8 @@
 Release history for Devel-Isa-Explainer
 
 {{$NEXT}}
+ [Internals]
+ - use namespace::clean in a few more places.
 
 0.002000 2016-05-19T12:30:00Z 6c368ff
  - isa-splain now accepts -M parameter to explicitly specify modules to load. This is helpful in handling cases where
