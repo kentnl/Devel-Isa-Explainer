@@ -272,8 +272,12 @@ sub _extract_mro {
     # Huh, No inheritance, and no subs. K.
     my $module_path = $class;
     $module_path =~ s{ (::|') }{/}sgx;
-    if ( not exists $INC{ $module_path . '.pm' } ) {
-      croak "No module called $class loaded" . _E5;
+
+    # TODO: Maybe don't make this fatal and return data context to user instead?
+    # Undecided, and will have to come after more complex concerns.
+    # - kentnl, Apr 2016
+    if ( not $INC{ $module_path . '.pm' } ) {
+      croak "No module called $class successfully loaded" . _E5;
     }
   }
   return \@mro_order;
