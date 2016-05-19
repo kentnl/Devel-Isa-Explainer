@@ -1,6 +1,9 @@
 Release history for Devel-Isa-Explainer
 
 {{$NEXT}}
+ [Documentation]
+ - Reference updated screenshots.
+
  [Internals]
  - use namespace::clean in a few more places.
 

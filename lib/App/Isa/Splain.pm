@@ -93,7 +93,7 @@ sub run {
   my $instance = App::Isa::Splain->new_from_ARGV;
   $instance->run;
 
-=for html <center><img alt="Colorised output from a Moose::Meta::Class" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/0/c1.png" width="820" height="559" /></center>
+=for html <center><img alt="Colorised output from a Moose::Meta::Class" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/1/c1.png" width="820" height="559" /></center>
 
 =head1 COMMAND LINE ARGUMENTS
 

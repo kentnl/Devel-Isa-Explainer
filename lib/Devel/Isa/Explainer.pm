@@ -303,7 +303,7 @@ This module does not concern itself with any of the fanciness of Roles, and inst
 on standard Perl5 Object Model infrastructure. ( Roles are effectively invisible at run-time as
 they appear as composed subs in the corresponding class )
 
-=for html <center><img alt="A Display of a simple output from simple usage" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/0/c3.png" width="820" height="559" /></center>
+=for html <center><img alt="A Display of a simple output from simple usage" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/1/c3.png" width="820" height="559" /></center>
 
 =head2 Conventional Sub Name Interpretation
 
@@ -328,7 +328,7 @@ be uncleaned type-constraint utility subs.
 
 =back
 
-=for html <center><img alt="A Display of different subs highlighted by convention" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/0/c2.png" width="820" height="559" /></center>
+=for html <center><img alt="A Display of different subs highlighted by convention" src="http://kentnl.github.io/screenshots/Devel-Isa-Explainer/1/c2.png" width="820" height="559" /></center>
 
 =head2 Inheritance Aware Sub Shadowing
 
