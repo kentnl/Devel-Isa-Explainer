@@ -33,6 +33,7 @@ t/01-basic.t
 t/02-shadowing.t
 t/cli/basic.t
 t/cli/dash-m.t
+t/internals/02-isacache-hide.t
 weaver.ini
 xt/author/critic.t
 xt/author/eol.t
