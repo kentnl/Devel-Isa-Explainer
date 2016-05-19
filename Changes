@@ -1,4 +1,4 @@
-Release history for Devel-Symdump-Compact
+Release history for Devel-Isa-Explainer
 
 {{$NEXT}}
  - isa-splain now accepts -M parameter to explicitly specify modules to load. This is helpful in handling cases where
