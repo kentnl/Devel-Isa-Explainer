@@ -10,11 +10,15 @@ our $VERSION = '0.002002';
 
 # AUTHORITY
 
+# PODNAME: isa-splain
+
 # ABSTRACT: Visualize Module Hierarchies on the command line
 
 use App::Isa::Splain;
 
 App::Isa::Splain->new_from_ARGV->run;
+
+=for stopwords isa splain
 
 =head1 DESCRIPTION
 
