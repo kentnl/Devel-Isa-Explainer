@@ -1,6 +1,9 @@
 Release history for Devel-Isa-Explainer
 
 {{$NEXT}}
+ [Documentation]
+ - Improve bin/isa-splain's documentation to be more helpful in places where `man isa-splain` might be expected to
+   work.
 
 0.002001 2016-05-19T14:07:12Z c167598
  [Documentation]
