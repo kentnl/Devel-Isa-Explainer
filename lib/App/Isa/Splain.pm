@@ -61,9 +61,18 @@ sub new_from_ARGV {
       push @load_modules, $1;
       next;
     }
-    croak 'Unexpected argument ' . $argument . _E3;
+    ## no critic (RequireCheckedSyscalls)
+    if( '--help' eq $argument) {
+      print _help();
+      exit;
+    }
+    if( '--version' eq $argument ) {
+      print _version();
+      exit;
+    }
+    croak 'Unexpected argument ' . $argument . _E3 . qq[\nSee $0 --help for more information];
   }
-  defined $module or croak 'Expected a module name, got none' . _E1;
+  defined $module or croak 'Expected a module name, got none' . _E1 . qq[\nSee $0 --help for more information];
   return $_[0]->new( module => $module, load_modules => [ @load_modules ? @load_modules : $module ] );
 }
 
@@ -84,6 +93,27 @@ sub run {
     unless print { $self->_output } explain_isa( $self->_module );
 
   return 0;
+}
+
+sub _help {
+  return <<"EOF";
+Usage: $0 [OPTIONS] MODNAME
+Load and inspect MODNAME's ISA Inheritance.
+
+OPTIONS:
+  -MLoad::Module    - Load "Load::Module" instead of MODNAME ( May be
+                      specified multiple times )
+
+  --help            - Show this help and exit
+  --version         - Show version and exit
+EOF
+}
+
+sub _version {
+  my $pkg = __PACKAGE__;
+  return <<"EOF";
+$0 ($pkg) $VERSION
+EOF
 }
 
 1;
