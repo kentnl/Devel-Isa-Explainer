@@ -1,6 +1,8 @@
 Release history for Devel-Isa-Explainer
 
 {{$NEXT}}
+ - UNIVERSAL now automatically shown in inheritance. ( Closes #11 )
+
  [Documentation]
  - Improve bin/isa-splain's documentation to be more helpful in places where `man isa-splain` might be expected to
    work.
