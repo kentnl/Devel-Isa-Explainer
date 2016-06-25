@@ -2,10 +2,15 @@ Release history for Devel-Isa-Explainer
 
 {{$NEXT}}
  - UNIVERSAL now automatically shown in inheritance. ( Closes #11 )
+ - discovering subs using "can" now removed, as "can" was prematurely exposing subs in crossed inheritances, which
+   leads to over-zealous de-duplication, and additional appearances of shadowing where no actual shadowing was
+   happening. ( #10 )
+ - blessed coderefs no longer misunderstood.
 
  [Dependencies::Stats]
  - Dependencies changed since 0.002001, see misc/*.deps* for details
- - test: +1
+ - runtime: +1
+ - test: +2
 
  [Documentation]
  - Improve bin/isa-splain's documentation to be more helpful in places where `man isa-splain` might be expected to

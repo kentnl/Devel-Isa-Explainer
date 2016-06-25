@@ -12,6 +12,7 @@ our $VERSION = '0.002900';
 
 use MRO::Compat ();
 use Exporter    ();
+use Scalar::Util qw(reftype);
 
 BEGIN {
   ## no critic (ProhibitCallsToUnexportedSubs)
@@ -25,6 +26,7 @@ BEGIN {
 our @EXPORT_OK = qw(
   is_mro_proxy
   get_linear_isa
+  get_package_sub
 );
 
 BEGIN {
@@ -82,6 +84,52 @@ sub get_linear_isa {
       : @{ _mro_get_linear_isa('UNIVERSAL') },
     #>>>
   ];
+}
+
+=func get_package_sub
+
+  my $sub = get_package_sub($package, $sub);
+
+Fetch a directly defined C<CodeRef> from C<$package> named C<$sub>
+
+Fake proxy methods (such as Class::C3 proxies) and stubs are ignored by this
+and instead return C<undef>
+
+  $result = undef / CODEREF
+
+=cut
+
+sub get_package_sub {
+  return undef if MRO_PROXIES and is_mro_proxy(@_);
+  my ( $package, $sub ) = @_;
+
+  # this is counter intuitive, but literally
+  # everything in a stash that is not a glob *is* a sub.
+  #
+  # Though they're usually constant-subs.
+  #
+  # Globs however can /contain/ subs in their {CODE} slot,
+  # but globs are not subs.
+  my $namespace = do {
+    no strict 'refs';
+    \%{"${package}::"};
+  };
+  return undef unless exists $namespace->{$sub};
+  if ( 'GLOB' eq reftype \$namespace->{$sub} ) {
+
+    # Autoviv guard.
+    return defined *{ \$namespace->{$sub} }{'CODE'} ? *{ \$namespace->{$sub} }{'CODE'} : undef;
+  }
+
+  # Note: This vivifies the stash slot into a glob...
+  # there's not much that can be done about this at present.
+  # Package::Stash does the same.
+  #
+  # This means the first of us or Package::Stash to traverse a symtable turns
+  # everything into globs in order to get coderefs out.
+  #
+  # Ideally, we don't do this, but ENEEDINFO
+  return \&{"${package}::${sub}"};
 }
 
 1;

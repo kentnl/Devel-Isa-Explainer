@@ -15,7 +15,8 @@ use Term::ANSIColor 3.00 ('colored');    # bright_
 use Carp           ('croak');
 use Package::Stash ();
 use MRO::Compat    ();
-use Devel::Isa::Explainer::_MRO qw( get_linear_isa );
+use Devel::Isa::Explainer::_MRO qw( get_linear_isa get_package_sub );
+
 
 # Perl critic is broken. This is not a void context.
 ## no critic (BuiltinFunctions::ProhibitVoidMap)
@@ -232,7 +233,7 @@ sub _extract_subs {
       $seen_subs->{$sub} = [];
       my $currently_visible;
       for my $class ( reverse @isa ) {
-        my $coderef = $class->can($sub) or next;
+        my $coderef = get_package_sub( $class, $sub ) or next;
 
         # Record the frame where the first new instance is seen.
         if ( not defined $currently_visible or $currently_visible != $coderef ) {

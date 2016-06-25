@@ -25,6 +25,7 @@ my %WriteMakefileArgs = (
     "MRO::Compat" => 0,
     "Module::Load" => 0,
     "Package::Stash" => 0,
+    "Scalar::Util" => 0,
     "Term::ANSIColor" => "3.00",
     "constant" => "1.03",
     "namespace::clean" => 0,
@@ -32,6 +33,7 @@ my %WriteMakefileArgs = (
     "warnings" => 0
   },
   "TEST_REQUIRES" => {
+    "B" => 0,
     "ExtUtils::MakeMaker" => 0,
     "File::Spec" => 0,
     "Test::Builder" => 0,
@@ -46,6 +48,7 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
+  "B" => 0,
   "Carp" => 0,
   "Exporter" => 0,
   "ExtUtils::MakeMaker" => 0,
@@ -53,6 +56,7 @@ my %FallbackPrereqs = (
   "MRO::Compat" => 0,
   "Module::Load" => 0,
   "Package::Stash" => 0,
+  "Scalar::Util" => 0,
   "Term::ANSIColor" => "3.00",
   "Test::Builder" => 0,
   "Test::Differences" => 0,
