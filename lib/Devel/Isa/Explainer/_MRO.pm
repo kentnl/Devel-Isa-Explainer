@@ -23,10 +23,39 @@ BEGIN {
 # yes, this is evil
 
 our @EXPORT_OK = qw(
+  is_mro_proxy
   get_linear_isa
 );
 
+BEGIN {
+  # MRO Proxies removed since 5.009_005
+  *MRO_PROXIES = ( $] <= 5.009005 ) ? sub() { 1 } : sub() { 0 };
+}
+
 use namespace::clean -except => 'import';
+
+=func is_mro_proxy
+
+  if ( MRO_PROXIES and is_mro_proxy( $package, $sub ) ) {
+    // its a proxy
+  } else {
+    // anything else
+  }
+
+Prior to 5.009_005, L<< backwards-compatibility support for C<MRO>|MRO::Compat >> for
+5.8 has to install "proxy" subs at various levels that I<emulate> alternative
+resolution orders by hiding relevant nodes in the gaps in tree.
+
+This detects those nodes so that we can pretend they don't exist.
+
+=cut
+
+sub is_mro_proxy {
+
+  # Note: this sub should be optimised out from calling anyway
+  # but this is just a failsafe
+  MRO_PROXIES ? !!( $Class::C3::MRO{ $_[0] } || {} )->{methods}{ $_[1] } : 0;
+}
 
 =func get_linear_isa
 
