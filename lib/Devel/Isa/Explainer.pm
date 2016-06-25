@@ -15,6 +15,7 @@ use Term::ANSIColor 3.00 ('colored');    # bright_
 use Carp           ('croak');
 use Package::Stash ();
 use MRO::Compat    ();
+use Devel::Isa::Explainer::_MRO qw( get_linear_isa );
 
 # Perl critic is broken. This is not a void context.
 ## no critic (BuiltinFunctions::ProhibitVoidMap)
@@ -256,11 +257,7 @@ sub _extract_mro {
   my ($class) = @_;
 
   ## no critic (ProhibitCallsToUnexportedSubs)
-  my (@isa) = @{ mro::get_linear_isa($class) };
-
-  # UNIVERSAL must be assumed last because mro does not return it
-  #   this also returns any parents UNIVERSAL may have had injected.
-  push @isa, @{ mro::get_linear_isa('UNIVERSAL') };
+  my (@isa) = @{ get_linear_isa($class) };
 
   my ( $found_interesting, $seen_subs ) = _extract_subs(@isa);
 
