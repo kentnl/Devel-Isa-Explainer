@@ -24,7 +24,7 @@ $INC{ 'Class' . $_ . q[.pm] } = 1 for qw( A B C );
   my @errors;
 
   for my $class ( grep { $_->{class} eq 'ClassA' } @{$mro} ) {
-    eval { $oks-- if ok( !scalar keys %{ $class->{subs} }, 'ClassA has no subs' ) } or push @errors, $@;
+    eval { $oks-- if ok( scalar keys %{ $class->{subs} }, 'ClassA has subs' ) } or push @errors, $@;
   }
   for my $class ( grep { $_->{class} eq 'ClassB' } @{$mro} ) {
     eval { $oks-- if ok( !scalar keys %{ $class->{subs} }, 'ClassB has no subs' ) } or push @errors, $@;

@@ -12,10 +12,9 @@ our $VERSION = '0.002002';
 
 use Exporter ();
 use Term::ANSIColor 3.00 ('colored');    # bright_
-use Carp           ('croak');
-use Package::Stash ();
-use MRO::Compat    ();
-use Devel::Isa::Explainer::_MRO qw( get_linear_isa get_package_sub );
+use Carp ('croak');
+use MRO::Compat ();
+use Devel::Isa::Explainer::_MRO qw( get_linear_isa get_package_subs );
 
 
 # Perl critic is broken. This is not a void context.
@@ -225,30 +224,15 @@ sub _extract_subs {
 
   # Discover all subs and compute full MRO every time a new sub-name
   # is found
-  for my $isa (@isa) {
-    for my $sub ( Package::Stash->new($isa)->list_all_symbols('CODE') ) {
-      next if exists $seen_subs->{$sub};
+  for my $isa ( reverse @isa ) {
+    my $subs = get_package_subs($isa);
+    for my $sub ( keys %{$subs} ) {
+      $seen_subs->{$sub} = [] unless exists $seen_subs->{$sub};
+      unshift @{ $seen_subs->{$sub} }, $isa;
 
-      # Compute the full sub->package MRO table bottom up
-      $seen_subs->{$sub} = [];
-      my $currently_visible;
-      for my $class ( reverse @isa ) {
-        my $coderef = get_package_sub( $class, $sub ) or next;
-
-        # Record the frame where the first new instance is seen.
-        if ( not defined $currently_visible or $currently_visible != $coderef ) {
-
-          # note: we're working bottom-up
-
-          unshift @{ $seen_subs->{$sub} }, $class;
-
-          # UNIVERSAL is not interesting, it is always present,
-          # but if any parents turn up with subs? Interested
-          $found_interesting++ unless 'UNIVERSAL' eq $class;
-          $currently_visible = $coderef;
-          next;
-        }
-      }
+      # UNIVERSAL is not interesting, it is always present,
+      # but if any parents turn up with subs? Interested
+      $found_interesting++ unless 'UNIVERSAL' eq $isa;
     }
   }
   return ( $found_interesting, $seen_subs );

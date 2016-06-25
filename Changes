@@ -6,10 +6,13 @@ Release history for Devel-Isa-Explainer
    leads to over-zealous de-duplication, and additional appearances of shadowing where no actual shadowing was
    happening. ( #10 )
  - blessed coderefs no longer misunderstood.
+ - deduplicating subs now entirely removed, subs that are actually there in the package must always be displayed as
+   they are either injected by roles or importing, and can actually end up calling themselves under inheritance. ( This
+   however is highly prone to explosions because MRO core sucks ) ( Related to #10 )
 
  [Dependencies::Stats]
  - Dependencies changed since 0.002001, see misc/*.deps* for details
- - runtime: +1
+ - runtime: +1 -1
  - test: +2
 
  [Documentation]
