@@ -160,7 +160,7 @@ stop_words = explainer Explainer interoperability
 
 [Documentation::RequirePodAtEnd]
 
-[Documentation::RequirePodLinksIncludeText]
+[-Documentation::RequirePodLinksIncludeText]
 
 [-Documentation::RequirePodSections]
 
@@ -317,7 +317,7 @@ allowed_pragmata = diagnostics feature perlversion strict warnings utf8
 
 [Subroutines::ProhibitExcessComplexity]
 
-[Subroutines::ProhibitExplicitReturnUndef]
+[-Subroutines::ProhibitExplicitReturnUndef]
 
 [Subroutines::ProhibitExportingUndeclaredSubs]
 
@@ -338,7 +338,7 @@ private_name_regex = _(?!build_)\w
 
 [-Subroutines::RequireArgUnpacking]
 
-[Subroutines::RequireFinalReturn]
+[-Subroutines::RequireFinalReturn]
 
 [-TestingAndDebugging::ProhibitNoStrict]
 

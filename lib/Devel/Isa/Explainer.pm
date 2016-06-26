@@ -4,7 +4,7 @@ use warnings;
 
 package Devel::Isa::Explainer;
 
-our $VERSION = '0.002001';
+our $VERSION = '0.002900'; # TRIAL
 
 # ABSTRACT: Pretty Print Hierarchies of Subs in Packages
 
@@ -12,13 +12,17 @@ our $AUTHORITY = 'cpan:KENTNL'; # AUTHORITY
 
 use Exporter ();
 use Term::ANSIColor 3.00 ('colored');    # bright_
-use Carp           ('croak');
-use Package::Stash ();
-use MRO::Compat    ();
+use Carp        ('croak');
+use MRO::Compat ();
+use B           ('svref_2object');
+use Devel::Isa::Explainer::_MRO qw( get_linear_class_shadows get_parents );
+
 
 # Perl critic is broken. This is not a void context.
 ## no critic (BuiltinFunctions::ProhibitVoidMap)
 use constant 1.03 ( { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' (id: %s#%d)', __PACKAGE__, $_ ), ) } 1 .. 5 } );
+
+use constant _HAS_CONST => B::CV->can('CONST');
 
 use namespace::clean;
 
@@ -78,21 +82,21 @@ sub _hl_TYPE_UTIL {
 }
 
 sub _hl_suffix {
-  return colored( $_[0], $SHADOW_SUFFIX )   if $_[2];
-  return colored( $_[0], $SHADOWED_SUFFIX ) if $_[1];
+  return colored( $_[0], $SHADOW_SUFFIX )   if $_[1]->{shadowing};
+  return colored( $_[0], $SHADOWED_SUFFIX ) if $_[1]->{shadowed};
   return q[];
 }
 
 sub _hl_TYPE { return colored( \@TYPE, $_[0] ) }
 
 sub _hl_PUBLIC {
-  return ( $_[1] ? colored( \@SHADOWED_PUBLIC, $_[0] ) : colored( \@PUBLIC, $_[0] ) )
-    . _hl_suffix( \@SHADOWED_PUBLIC, $_[1], $_[2] );
+  return ( $_[1]->{shadowed} ? colored( \@SHADOWED_PUBLIC, $_[0] ) : colored( \@PUBLIC, $_[0] ) )
+    . _hl_suffix( \@SHADOWED_PUBLIC, $_[1] );
 }
 
 sub _hl_PRIVATE {
-  return ( $_[1] ? colored( \@SHADOWED_PRIVATE, $_[0] ) : colored( \@PRIVATE, $_[0] ) )
-    . _hl_suffix( \@SHADOWED_PRIVATE, $_[1], $_[2] );
+  return ( $_[1]->{shadowed} ? colored( \@SHADOWED_PRIVATE, $_[0] ) : colored( \@PRIVATE, $_[0] ) )
+    . _hl_suffix( \@SHADOWED_PRIVATE, $_[1] );
 }
 
 sub _pp_sub {
@@ -106,13 +110,15 @@ sub _pp_key {
   push @tokens, 'Type Constraint Utility: ' . _hl_TYPE_UTIL('typeop_TypeName');
   push @tokens, 'Private/Boring Sub: ' . _hl_PRIVATE('foo_example');
   if ($SHOW_SHADOWED) {
-    push @tokens, 'Public Sub shadowing another: ' . _hl_PUBLIC( 'shadowing_example', 0, 1 );
-    push @tokens, 'Public Sub shadowed by higher scope: ' . _hl_PUBLIC( 'shadowed_example', 1 );
-    push @tokens, 'Public Sub shadowing another and shadowed itself: ' . _hl_PUBLIC( 'shadowed_shadowing_example', 1, 1 );
+    push @tokens, 'Public Sub shadowing another: ' . _hl_PUBLIC( 'shadowing_example', { shadowing => 1 } );
+    push @tokens, 'Public Sub shadowed by higher scope: ' . _hl_PUBLIC( 'shadowed_example', { shadowed => 1 } );
+    push @tokens, 'Public Sub shadowing another and shadowed itself: '
+      . _hl_PUBLIC( 'shadowed_shadowing_example', { shadowing => 1, shadowed => 1 } );
 
-    push @tokens, 'Private/Boring Sub shadowing another: ' . _hl_PRIVATE( 'shadowing_example', 0, 1 );
-    push @tokens, 'Private/Boring Sub shadowed by higher scope: ' . _hl_PRIVATE( 'shadowed_example', 1 );
-    push @tokens, 'Private/Boring Sub another and shadowed itself: ' . _hl_PRIVATE( 'shadowing_shadowed_example', 1, 1 );
+    push @tokens, 'Private/Boring Sub shadowing another: ' . _hl_PRIVATE( 'shadowing_example', { shadowing => 1 } );
+    push @tokens, 'Private/Boring Sub shadowed by higher scope: ' . _hl_PRIVATE( 'shadowed_example', { shadowed => 1 } );
+    push @tokens, 'Private/Boring Sub another and shadowed itself: '
+      . _hl_PRIVATE( 'shadowing_shadowed_example', { shadowed => 1, shadowing => 1 } );
   }
   push @tokens, 'No Subs: ()';
   return sprintf "Key:\n$INDENT%s\n\n", join qq[\n$INDENT], @tokens;
@@ -189,7 +195,7 @@ sub _pp_subs {
 
     # Suck up trailing ,
     $cluster_out =~ s/,[ ]\n\z/\n/sx;
-    $cluster_out =~ s{(\w+)}{ _pp_sub($1, $subs{$1}->{shadowed}, $subs{$1}->{shadowing} ) }gsex;
+    $cluster_out =~ s{(\w+)}{ _pp_sub($1, $subs{$1} ) }gsex;
     push @out_clusters, $cluster_out;
   }
   return join qq[\n], @out_clusters;
@@ -215,60 +221,41 @@ sub _pp_class {
 }
 
 sub _extract_mro {
-  my ($class)     = @_;
-  my ($seen_subs) = {};
+  my ($class) = @_;
 
-  ## no critic (ProhibitCallsToUnexportedSubs)
-  my (@isa) = @{ mro::get_linear_isa($class) };
+  my (@mro_order) = @{ get_linear_class_shadows($class) };
 
-  # Discover all subs and compute full MRO every time a new sub-name
-  # is found
-  for my $isa (@isa) {
-    for my $sub ( Package::Stash->new($isa)->list_all_symbols('CODE') ) {
-      next if exists $seen_subs->{$sub};
+  my $found_interesting = 0;
+  for my $isa_entry (@mro_order) {
 
-      # Compute the full sub->package MRO table bottom up
-
-      $seen_subs->{$sub} = [];
-      my $currently_visible;
-      for my $class ( reverse @isa ) {
-        my $coderef = $class->can($sub) or next;
-
-        # Record the frame where the first new instance is seen.
-        if ( not defined $currently_visible or $currently_visible != $coderef ) {
-          unshift @{ $seen_subs->{$sub} }, $class;    # note: we're working bottom-up
-          $currently_visible = $coderef;
-          next;
-        }
+    # Universal will always be present, but parents/children
+    # of UNIVERSAL are "interesting"
+    next if 'UNIVERSAL' eq $isa_entry->{class};
+    next unless keys %{ $isa_entry->{subs} };
+    $found_interesting++;
+    last;
+  }
+  for my $isa_entry (@mro_order) {
+    $isa_entry->{parents} = get_parents( $isa_entry->{class} );
+    ## no critic (Subroutines::ProhibitCallsToUnexportedSubs)
+    $isa_entry->{mro} = mro::get_mro( $isa_entry->{class} );
+    for my $sub ( keys %{ $isa_entry->{subs} } ) {
+      my $sub_data = $isa_entry->{subs}->{$sub};
+      @{$sub_data}{ 'xsub', 'constant', 'stub' } = ( 0, 0, 0 );
+      my $ref = delete $sub_data->{ref};
+      my $cv  = svref_2object($ref);
+      if ( _HAS_CONST ? $cv->CONST : ref $cv->XSUBANY ) {
+        $sub_data->{constant} = 1;
+      }
+      elsif ( $cv->XSUB ) {
+        $sub_data->{xsub} = 1;
+      }
+      elsif ( not defined &{$ref} ) {
+        $sub_data->{stub} = 1;
       }
     }
   }
-
-  my $class_data = {};
-
-  # Group "seen subs" into class oriented structures,
-  # and classify them.
-  for my $sub ( keys %{$seen_subs} ) {
-    my @classes = @{ $seen_subs->{$sub} };
-
-    for my $isa ( @{ $seen_subs->{$sub} } ) {
-
-      # mark all subs both shadowing and shadowed until proven otherwise
-      $class_data->{$isa}->{$sub} = { shadowed => 1, shadowing => 1 };
-    }
-
-    # mark top-most sub unshadowed
-    $class_data->{ $classes[0] }->{$sub}->{shadowed} = 0;
-
-    # mark bottom-most sub unshadowing
-    $class_data->{ $classes[-1] }->{$sub}->{shadowing} = 0;
-
-  }
-
-  # Order class structures by MRO order
-  my (@mro_order) = map { { class => $_, subs => $class_data->{$_} || {} } } @isa;
-
-  if ( 1 > @mro_order or ( 1 >= @mro_order and 1 > keys %{ $mro_order[0]->{subs} } ) ) {
+  if ( not $found_interesting ) {
 
     # Huh, No inheritance, and no subs. K.
     my $module_path = $class;
@@ -298,7 +285,7 @@ Devel::Isa::Explainer - Pretty Print Hierarchies of Subs in Packages
 
 =head1 VERSION
 
-version 0.002001
+version 0.002900
 
 =head1 SYNOPSIS
 

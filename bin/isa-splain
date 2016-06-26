@@ -6,9 +6,11 @@ use warnings;
 package # Hideme
   App::Isa::Splain::_Script;
 
-our $VERSION = '0.002001';
+our $VERSION = '0.002900'; # TRIAL
 
 our $AUTHORITY = 'cpan:KENTNL'; # AUTHORITY
+
+# PODNAME: isa-splain
 
 # ABSTRACT: Visualize Module Hierarchies on the command line
 
@@ -22,17 +24,43 @@ __END__
 
 =encoding UTF-8
 
+=for stopwords isa splain Preload
+
 =head1 NAME
 
-App::Isa::Splain::_Script - Visualize Module Hierarchies on the command line
+isa-splain - Visualize Module Hierarchies on the command line
 
 =head1 VERSION
 
-version 0.002001
+version 0.002900
 
-=head1 DESCRIPTION
+=head1 USAGE
 
-See L<< C<App::Isa::Splain> |App::Isa::Splain >> For details.
+  isa-splain [OPTS] Module::Name::To::Inspect
+
+=head1 OPTIONS
+
+=head2 -MC<Module::Name>
+
+Preload C<Module::Name> instead of C<Module::Name::To::Inspect>
+
+This is useful in cases where loading C<Module::Name::To::Inspect> directly
+is either impossible ( due to not existing as a .pm file ), or problematic ( due to
+some load time complication )
+
+=head1 EXAMPLES
+
+  isa-splain -MB B::CV
+
+This shows the graph of C<B::CV> after loading C<B.pm>
+
+  isa-splain -Moose Class::MOP::Class
+
+This shows the graph of C<Class::MOP::Class> after loading C<oose.pm>
+
+=head1 SEE ALSO
+
+L<App::Isa::Splain>, L<Devel::Isa::Explainer>
 
 =head1 AUTHOR
 

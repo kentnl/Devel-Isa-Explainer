@@ -1,5 +1,32 @@
 Release history for Devel-Isa-Explainer
 
+0.002900 2016-06-26T19:35:43Z 7405ed0
+ - UNIVERSAL now automatically shown in inheritance. ( Closes #11 )
+ - discovering subs using "can" now removed, as "can" was prematurely exposing subs in crossed inheritances, which
+   leads to over-zealous de-duplication, and additional appearances of shadowing where no actual shadowing was
+   happening. ( #10 )
+ - blessed coderefs no longer misunderstood.
+ - deduplicating subs now entirely removed, subs that are actually there in the package must always be displayed as
+   they are either injected by roles or importing, and can actually end up calling themselves under inheritance. ( This
+   however is highly prone to explosions because MRO core sucks ) ( Related to #10 )
+ - isa-splain now supports --help and --version ( Closes #9 )
+
+ [Dependencies::Stats]
+ - Dependencies changed since 0.002001, see misc/*.deps* for details
+ - runtime: +2 -1
+ - test: +1
+
+ [Documentation]
+ - Improve bin/isa-splain's documentation to be more helpful in places where `man isa-splain` might be expected to
+   work.
+
+ [Internals]
+ - Highligher functions now receive all sub metadata directly as a hash, instead of being called with a list of binary
+   flags.
+ - Parents of classes now recorded in internal data structures, but not yet exposed.
+ - MRO type of classes now recorded in internal data structures.
+ - XSUB, Constant and stub-subs marked in internal data structures.
+
 0.002001 2016-05-19T14:07:12Z c167598
  [Documentation]
  - Reference updated screenshots.

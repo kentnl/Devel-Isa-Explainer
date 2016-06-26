@@ -20,11 +20,12 @@ my %WriteMakefileArgs = (
   "MIN_PERL_VERSION" => "5.006",
   "NAME" => "Devel::Isa::Explainer",
   "PREREQ_PM" => {
+    "B" => 0,
     "Carp" => 0,
     "Exporter" => 0,
     "MRO::Compat" => 0,
     "Module::Load" => 0,
-    "Package::Stash" => 0,
+    "Scalar::Util" => 0,
     "Term::ANSIColor" => "3.00",
     "constant" => "1.03",
     "namespace::clean" => 0,
@@ -35,25 +36,28 @@ my %WriteMakefileArgs = (
     "ExtUtils::MakeMaker" => 0,
     "File::Spec" => 0,
     "Test::Builder" => 0,
+    "Test::Differences" => 0,
     "Test::More" => "0.89"
   },
-  "VERSION" => "0.002001",
+  "VERSION" => "0.002900",
   "test" => {
-    "TESTS" => "t/*.t t/00-compile/*.t t/cli/*.t t/internals/*.t"
+    "TESTS" => "t/*.t t/00-compile/*.t t/cli/*.t t/internals/*.t t/internals/mro/*.t"
   }
 );
 
 
 my %FallbackPrereqs = (
+  "B" => 0,
   "Carp" => 0,
   "Exporter" => 0,
   "ExtUtils::MakeMaker" => 0,
   "File::Spec" => 0,
   "MRO::Compat" => 0,
   "Module::Load" => 0,
-  "Package::Stash" => 0,
+  "Scalar::Util" => 0,
   "Term::ANSIColor" => "3.00",
   "Test::Builder" => 0,
+  "Test::Differences" => 0,
   "Test::More" => "0.89",
   "constant" => "1.03",
   "namespace::clean" => 0,
