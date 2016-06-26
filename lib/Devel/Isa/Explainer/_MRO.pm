@@ -30,6 +30,8 @@ our @EXPORT_OK = qw(
   get_package_subs
   get_linear_class_shadows
   get_parents
+  get_linear_method_map
+  get_linear_class_map
 );
 
 BEGIN {
@@ -260,6 +262,44 @@ sub get_parents {
   }
   return [] if _mro_is_universal($package);
   ['UNIVERSAL'];
+}
+
+=func get_linear_method_map
+
+  my $arrayref = get_linear_method_map( $classname, $method )
+
+Returns an C<ArrayRef> describing the vertical stack of a given method.
+
+C<ISA> levels without defined C<CodeRefs> are represented as C<undef>
+
+  $result   = [ $arrayref, $arrayref, $arrayref, ... ]
+  $arrayref = [ CLASSNAME, undef / CODEREF           ]
+
+=cut
+
+sub get_linear_method_map {
+  my ( $class, $method ) = @_;
+  return [ map { [ $_, get_package_sub( $_, $method ) ] } @{ get_linear_isa($class) } ];
+}
+
+=func get_linear_class_map
+
+  my $arrayref = get_linear_class_map( $classname )
+
+Returns C<CodeRef> stashes for all packages in C<$classname>'s inheritance (including C<UNIVERSAL>s)
+in method-resolution-order.
+
+Returns:
+
+  $result   = [ $arrayref, $arrayref, $arrayref,  ... ]
+  $arrayref = [ CLASSNAME, $submap                    ]
+  $submap   = { SUBNAME => CODEREF,               ... }
+
+=cut
+
+sub get_linear_class_map {
+  my ($class) = @_;
+  [ map { [ $_, get_package_subs($_) ] } @{ get_linear_isa($class) } ];
 }
 
 1;
