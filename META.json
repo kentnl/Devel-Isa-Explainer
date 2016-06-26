@@ -104,6 +104,7 @@
             "MRO::Compat" : "0",
             "Module::Load" : "0",
             "Package::Stash" : "0",
+            "Scalar::Util" : "0",
             "Term::ANSIColor" : "3.00",
             "constant" : "1.03",
             "namespace::clean" : "0",
@@ -119,6 +120,7 @@
             "Test::More" : "0.99"
          },
          "requires" : {
+            "B" : "0",
             "ExtUtils::MakeMaker" : "0",
             "File::Spec" : "0",
             "Test::Builder" : "0",

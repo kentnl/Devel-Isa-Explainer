@@ -1,5 +1,6 @@
 {
    "modules" : {
+      "B" : "1.58",
       "CPAN::Meta" : "2.150005",
       "Carp" : "1.38",
       "Dist::Zilla" : "5.047",
@@ -64,6 +65,7 @@
       "Module::Load" : "0.32",
       "Package::Stash" : "0.37",
       "Pod::Coverage::TrustPod" : "0.100003",
+      "Scalar::Util" : "1.45",
       "Software::License::Perl_5" : "0.103012",
       "Term::ANSIColor" : "4.05",
       "Test::Builder" : "1.302022",

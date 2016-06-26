@@ -36,13 +36,16 @@ t/02-shadowing.t
 t/cli/basic.t
 t/cli/dash-m.t
 t/internals/02-isacache-hide.t
+t/internals/04-blessed_subs.t
 t/internals/max-width.t
 t/internals/mro/01-get-linear-isa.t
+t/internals/mro/02-get-package-sub.t
 weaver.ini
 xt/author/critic.t
 xt/author/eol.t
 xt/author/pod-coverage.t
 xt/author/pod-syntax.t
+xt/release/01-package-stash-compat.t
 xt/release/cpan-changes.t
 xt/release/distmeta.t
 xt/release/kwalitee.t
