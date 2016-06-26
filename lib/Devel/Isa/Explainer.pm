@@ -234,6 +234,8 @@ sub _extract_mro {
   }
   for my $isa_entry (@mro_order) {
     $isa_entry->{parents} = get_parents( $isa_entry->{class} );
+    ## no critic (Subroutines::ProhibitCallsToUnexportedSubs)
+    $isa_entry->{mro} = mro::get_mro( $isa_entry->{class} );
     for my $sub ( keys %{ $isa_entry->{subs} } ) {
       delete $isa_entry->{subs}->{$sub}->{ref};
     }
