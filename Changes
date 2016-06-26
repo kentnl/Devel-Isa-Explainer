@@ -1,9 +1,13 @@
 Release history for Devel-Isa-Explainer
 
-0.002002 2016-05-20T06:56:10Z a0b0664
+0.002002 2016-05-20T06:56:11Z 3a10825
  [Documentation]
  - Improve bin/isa-splain's documentation to be more helpful in places where `man isa-splain` might be expected to
    work.
+
+ [Internals]
+ - Highligher functions now receive all sub metadata directly as a hash, instead of being called with a list of binary
+   flags.
 
 0.002001 2016-05-19T14:07:12Z c167598
  [Documentation]
