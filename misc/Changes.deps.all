@@ -1,6 +1,8 @@
 This file contains ALL changes in dependencies in both REQUIRED / OPTIONAL dependencies for all phases (configure/build/runtime/test/develop)
 
-0.002900
+0.002901
+
+0.002900 2016-06-26T19:35:43Z
  [Added / runtime requires]
  - B
  - Scalar::Util

@@ -1,6 +1,6 @@
 Release history for Devel-Isa-Explainer
 
-0.002901 2016-06-26T20:08:33Z 3f8e741
+0.002901 2016-06-26T20:08:55Z d314874
 
 0.002900 2016-06-26T19:35:43Z 7405ed0
  - UNIVERSAL now automatically shown in inheritance. ( Closes #11 )
