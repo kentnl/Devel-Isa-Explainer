@@ -29,6 +29,7 @@ our @EXPORT_OK = qw(
   get_package_sub
   get_package_subs
   get_linear_class_shadows
+  get_parents
 );
 
 BEGIN {
@@ -222,6 +223,43 @@ sub get_linear_class_shadows {
     unshift @isa_out, { class => $package, subs => $node };
   }
   \@isa_out;
+}
+
+=func get_parents
+
+  my $parents = get_parents( $package );
+
+This utility finds the effective "depth 1" parents of a given class.
+That is, in normal conditions, it just returns the contents of C<@ISA> verbatim.
+
+However, if C<@ISA> is empty, it returns the effective parent, C<UNIVERSAL>
+unless of course, the given class is a parent of C<UNIVERSAL> itself (insert drugs here)
+at which point it will return an empty list.
+
+Because despite the fact a parent of C<UNIVERSAL> can call C<UNIVERSAL> methods,
+reporting C<< UNIVERSAL->parent->parent == UNIVERSAL >> will of course create cycles
+for anyone who touches it.
+
+=cut
+
+sub get_parents {
+  my ($package) = @_;
+  my $namespace = do {
+    no strict 'refs';
+    \%{"${package}::"};
+  };
+
+  if ( exists $namespace->{ISA} ) {
+    my $entry_ref = \$namespace->{ISA};
+    if (  'GLOB' eq reftype $entry_ref
+      and defined *{$entry_ref}{ARRAY}
+      and @{ *{$entry_ref}{ARRAY} } )
+    {
+      return [ @{ *{$entry_ref}{ARRAY} } ];
+    }
+  }
+  return [] if _mro_is_universal($package);
+  ['UNIVERSAL'];
 }
 
 1;
