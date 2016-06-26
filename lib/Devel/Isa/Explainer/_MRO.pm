@@ -32,6 +32,7 @@ our @EXPORT_OK = qw(
   get_parents
   get_linear_method_map
   get_linear_class_map
+  get_flattened_class
 );
 
 BEGIN {
@@ -300,6 +301,41 @@ Returns:
 sub get_linear_class_map {
   my ($class) = @_;
   [ map { [ $_, get_package_subs($_) ] } @{ get_linear_isa($class) } ];
+}
+
+=func get_flattened_class
+
+  my $hashref = get_flattened_class( $class_name );
+
+Returns a fully expanded "Flat" representation of a classes hierarchy,
+with still enough data present to trace method resolution.
+
+Returns:
+
+  $result = { SUBNAME => $entry, ... }
+  $entry  = { ref     => CODEREF,
+              via     => CLASSNAME,
+              parents => $parentrefs, }
+
+  $parentrefs      = [ $parentref_entry, ... ]
+  $parentref_entry = [ CLASSNAME, CODEREF    ]
+
+=cut
+
+sub get_flattened_class {
+  my ($class) = @_;
+  my $methods = {};
+  for my $package ( reverse @{ get_linear_isa($class) } ) {
+    my $subs = get_package_subs($package);
+    for my $subname ( keys %{$subs} ) {
+      $methods->{$subname}->{parents} ||= [];
+      unshift @{ $methods->{$subname}->{parents} }, [ $methods->{$subname}->{via}, $methods->{$subname}->{ref} ]
+        if exists $methods->{$subname}->{ref};
+      $methods->{$subname}->{ref} = $subs->{$subname};
+      $methods->{$subname}->{via} = $package;
+    }
+  }
+  $methods;
 }
 
 1;
