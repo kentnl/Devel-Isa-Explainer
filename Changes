@@ -1,6 +1,6 @@
 Release history for Devel-Isa-Explainer
 
-0.002002 2016-06-26T19:22:09Z a77844e
+0.002002 2016-06-26T19:22:10Z 74d1604
  - UNIVERSAL now automatically shown in inheritance. ( Closes #11 )
  - discovering subs using "can" now removed, as "can" was prematurely exposing subs in crossed inheritances, which
    leads to over-zealous de-duplication, and additional appearances of shadowing where no actual shadowing was
@@ -9,6 +9,7 @@ Release history for Devel-Isa-Explainer
  - deduplicating subs now entirely removed, subs that are actually there in the package must always be displayed as
    they are either injected by roles or importing, and can actually end up calling themselves under inheritance. ( This
    however is highly prone to explosions because MRO core sucks ) ( Related to #10 )
+ - isa-splain now supports --help and --version ( Closes #9 )
 
  [Dependencies::Stats]
  - Dependencies changed since 0.002001, see misc/*.deps* for details
