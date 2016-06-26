@@ -4,7 +4,7 @@ use warnings;
 
 package App::Isa::Splain;
 
-our $VERSION = '0.002002';
+our $VERSION = '0.002901';
 
 # AUTHORITY
 

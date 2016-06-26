@@ -8,7 +8,7 @@ package Devel::Isa::Explainer::_MRO;
 
 # AUTHORITY
 
-our $VERSION = '0.002900';
+our $VERSION = '0.002901';
 
 use MRO::Compat ();
 use Exporter    ();
