@@ -4,7 +4,7 @@
       "Kent Fredric <kentnl@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.047, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Dist::Zilla version 5.047, CPAN::Meta::Converter version 2.150005",
    "license" : [
       "perl_5"
    ],
@@ -232,7 +232,7 @@
                }
             },
             "name" : "@Author::KENTNL/Git::Contributors",
-            "version" : "0.022"
+            "version" : "0.023"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::GatherDir",
@@ -258,7 +258,7 @@
                }
             },
             "name" : "@Author::KENTNL/Git::GatherDir",
-            "version" : "2.036"
+            "version" : "2.039"
          },
          {
             "class" : "Dist::Zilla::Plugin::License",
@@ -309,7 +309,7 @@
                "Dist::Zilla::Role::RepoFileInjector" : {
                   "allow_overwrite" : 1,
                   "repo_root" : ".",
-                  "version" : "0.006"
+                  "version" : "0.007"
                }
             },
             "name" : "@Author::KENTNL/Author::KENTNL::CONTRIBUTING",
@@ -318,7 +318,7 @@
          {
             "class" : "Dist::Zilla::Plugin::CopyFilesFromBuild",
             "name" : "@Author::KENTNL/CopyXBuild",
-            "version" : "0.161150"
+            "version" : "0.161350"
          },
          {
             "class" : "Dist::Zilla::Plugin::MetaTests",
@@ -418,6 +418,7 @@
                   "skip_version_provider" : 0
                },
                "Dist::Zilla::Role::Version::Sanitize" : {
+                  "$Dist::Zilla::Role::Version::Sanitize::VERSION" : "0.002002",
                   "mantissa" : "6",
                   "normal_form" : "numify"
                }
@@ -539,7 +540,7 @@
          {
             "class" : "Dist::Zilla::Plugin::Prereqs::AuthorDeps",
             "name" : "@Author::KENTNL/Prereqs::AuthorDeps",
-            "version" : "0.005"
+            "version" : "0.006"
          },
          {
             "class" : "Dist::Zilla::Plugin::MinimumPerl",
@@ -594,7 +595,7 @@
                }
             },
             "name" : "@Author::KENTNL/RunExtraTests",
-            "version" : "0.028"
+            "version" : "0.029"
          },
          {
             "class" : "Dist::Zilla::Plugin::TestRelease",
@@ -625,7 +626,7 @@
                }
             },
             "name" : "@Author::KENTNL/Git::Check",
-            "version" : "2.036"
+            "version" : "2.039"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::Commit",
@@ -650,7 +651,7 @@
                }
             },
             "name" : "@Author::KENTNL/commit_dirty_files",
-            "version" : "2.036"
+            "version" : "2.039"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::Tag",
@@ -671,7 +672,7 @@
                }
             },
             "name" : "@Author::KENTNL/tag_master",
-            "version" : "2.036"
+            "version" : "2.039"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::NextRelease",
@@ -723,7 +724,7 @@
                }
             },
             "name" : "@Author::KENTNL/commit_release_changes",
-            "version" : "2.036"
+            "version" : "2.039"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::CommitBuild",
@@ -741,7 +742,7 @@
                }
             },
             "name" : "@Author::KENTNL/Git::CommitBuild",
-            "version" : "2.036"
+            "version" : "2.039"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::Tag",
@@ -762,7 +763,7 @@
                }
             },
             "name" : "@Author::KENTNL/tag_release",
-            "version" : "2.036"
+            "version" : "2.039"
          },
          {
             "class" : "Dist::Zilla::Plugin::UploadToCPAN",
