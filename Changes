@@ -1,6 +1,6 @@
 Release history for Devel-Isa-Explainer
 
-0.002002 2016-06-26T19:20:41Z 08aee41
+0.002002 2016-06-26T19:22:09Z a77844e
  - UNIVERSAL now automatically shown in inheritance. ( Closes #11 )
  - discovering subs using "can" now removed, as "can" was prematurely exposing subs in crossed inheritances, which
    leads to over-zealous de-duplication, and additional appearances of shadowing where no actual shadowing was
@@ -12,8 +12,8 @@ Release history for Devel-Isa-Explainer
 
  [Dependencies::Stats]
  - Dependencies changed since 0.002001, see misc/*.deps* for details
- - runtime: +1 -1
- - test: +2
+ - runtime: +2 -1
+ - test: +1
 
  [Documentation]
  - Improve bin/isa-splain's documentation to be more helpful in places where `man isa-splain` might be expected to
@@ -24,6 +24,7 @@ Release history for Devel-Isa-Explainer
    flags.
  - Parents of classes now recorded in internal data structures, but not yet exposed.
  - MRO type of classes now recorded in internal data structures.
+ - XSUB, Constant and stub-subs marked in internal data structures.
 
 0.002001 2016-05-19T14:07:12Z c167598
  [Documentation]

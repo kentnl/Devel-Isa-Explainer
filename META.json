@@ -99,6 +99,7 @@
       },
       "runtime" : {
          "requires" : {
+            "B" : "0",
             "Carp" : "0",
             "Exporter" : "0",
             "MRO::Compat" : "0",
@@ -119,7 +120,6 @@
             "Test::More" : "0.99"
          },
          "requires" : {
-            "B" : "0",
             "ExtUtils::MakeMaker" : "0",
             "File::Spec" : "0",
             "Test::Builder" : "0",

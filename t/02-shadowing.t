@@ -68,17 +68,17 @@ is( scalar keys %{ $mro->[2]->{subs} }, 3, "base class has 3 subs" );
 
 is_deeply(
   $mro->[0]->{subs}->{three_layer_shadow},
-  { shadowing => 1, shadowed => 0 },
+  { shadowing => 1, shadowed => 0, xsub => 0, constant => 0, stub => 0 },
   "three layer shadow top layer shadowing but not shadowed"
 );
 is_deeply(
   $mro->[1]->{subs}->{three_layer_shadow},
-  { shadowing => 1, shadowed => 1 },
+  { shadowing => 1, shadowed => 1, xsub => 0, constant => 0, stub => 0 },
   "three layer shadow middle layer shadowing and shadowed"
 );
 is_deeply(
   $mro->[2]->{subs}->{three_layer_shadow},
-  { shadowing => 0, shadowed => 1 },
+  { shadowing => 0, shadowed => 1, xsub => 0, constant => 0, stub => 0 },
   "three layer shadow bottom layer shadowed but not shadowing"
 );
 

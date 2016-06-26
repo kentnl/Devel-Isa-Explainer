@@ -3,7 +3,6 @@ abstract: 'Pretty Print Hierarchies of Subs in Packages'
 author:
   - 'Kent Fredric <kentnl@cpan.org>'
 build_requires:
-  B: '0'
   ExtUtils::MakeMaker: '0'
   File::Spec: '0'
   Test::Builder: '0'
@@ -28,6 +27,7 @@ provides:
     file: lib/Devel/Isa/Explainer.pm
     version: '0.002002'
 requires:
+  B: '0'
   Carp: '0'
   Exporter: '0'
   MRO::Compat: '0'

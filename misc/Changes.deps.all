@@ -2,10 +2,10 @@ This file contains ALL changes in dependencies in both REQUIRED / OPTIONAL depen
 
 0.002002
  [Added / runtime requires]
+ - B
  - Scalar::Util
 
  [Added / test requires]
- - B
  - Test::Differences
 
  [Removed / runtime requires]

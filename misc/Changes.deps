@@ -2,10 +2,10 @@ This file contains changes in REQUIRED dependencies for standard CPAN phases (co
 
 0.002002
  [Added / runtime requires]
+ - B
  - Scalar::Util
 
  [Added / test requires]
- - B
  - Test::Differences
 
  [Removed / runtime requires]
