@@ -14,7 +14,7 @@ use Exporter ();
 use Term::ANSIColor 3.00 ('colored');    # bright_
 use Carp ('croak');
 use MRO::Compat ();
-use Devel::Isa::Explainer::_MRO qw( get_linear_class_shadows );
+use Devel::Isa::Explainer::_MRO qw( get_linear_class_shadows get_parents );
 
 
 # Perl critic is broken. This is not a void context.
@@ -233,6 +233,7 @@ sub _extract_mro {
     last;
   }
   for my $isa_entry (@mro_order) {
+    $isa_entry->{parents} = get_parents( $isa_entry->{class} );
     for my $sub ( keys %{ $isa_entry->{subs} } ) {
       delete $isa_entry->{subs}->{$sub}->{ref};
     }

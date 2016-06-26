@@ -1,6 +1,6 @@
 Release history for Devel-Isa-Explainer
 
-0.002002 2016-06-26T19:20:41Z d97586e
+0.002002 2016-06-26T19:20:41Z 44f5fdb
  - UNIVERSAL now automatically shown in inheritance. ( Closes #11 )
  - discovering subs using "can" now removed, as "can" was prematurely exposing subs in crossed inheritances, which
    leads to over-zealous de-duplication, and additional appearances of shadowing where no actual shadowing was
@@ -22,6 +22,7 @@ Release history for Devel-Isa-Explainer
  [Internals]
  - Highligher functions now receive all sub metadata directly as a hash, instead of being called with a list of binary
    flags.
+ - Parents of classes now recorded in internal data structures, but not yet exposed.
 
 0.002001 2016-05-19T14:07:12Z c167598
  [Documentation]
