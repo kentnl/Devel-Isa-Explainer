@@ -10,6 +10,8 @@ our $VERSION = '0.002002';
 
 our $AUTHORITY = 'cpan:KENTNL'; # AUTHORITY
 
+# PODNAME: isa-splain
+
 # ABSTRACT: Visualize Module Hierarchies on the command line
 
 use App::Isa::Splain;
@@ -22,9 +24,11 @@ __END__
 
 =encoding UTF-8
 
+=for stopwords isa splain
+
 =head1 NAME
 
-App::Isa::Splain::_Script - Visualize Module Hierarchies on the command line
+isa-splain - Visualize Module Hierarchies on the command line
 
 =head1 VERSION
 
