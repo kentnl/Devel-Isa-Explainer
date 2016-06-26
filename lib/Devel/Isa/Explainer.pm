@@ -4,7 +4,7 @@ use warnings;
 
 package Devel::Isa::Explainer;
 
-our $VERSION = '0.002900'; # TRIAL
+our $VERSION = '0.002901'; # TRIAL
 
 # ABSTRACT: Pretty Print Hierarchies of Subs in Packages
 
@@ -285,7 +285,7 @@ Devel::Isa::Explainer - Pretty Print Hierarchies of Subs in Packages
 
 =head1 VERSION
 
-version 0.002900
+version 0.002901
 
 =head1 SYNOPSIS
 

@@ -8,7 +8,7 @@ package Devel::Isa::Explainer::_MRO;
 
 our $AUTHORITY = 'cpan:KENTNL'; # AUTHORITY
 
-our $VERSION = '0.002900'; # TRIAL
+our $VERSION = '0.002901'; # TRIAL
 
 use MRO::Compat ();
 use Exporter    ();
@@ -352,7 +352,7 @@ Devel::Isa::Explainer::_MRO - Method-resolution-order Utilities for DIE
 
 =head1 VERSION
 
-version 0.002900
+version 0.002901
 
 =head1 FUNCTIONS
 
