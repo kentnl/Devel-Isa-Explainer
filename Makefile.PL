@@ -20,6 +20,7 @@ my %WriteMakefileArgs = (
   "MIN_PERL_VERSION" => "5.006",
   "NAME" => "Devel::Isa::Explainer",
   "PREREQ_PM" => {
+    "B" => 0,
     "Carp" => 0,
     "Exporter" => 0,
     "MRO::Compat" => 0,
@@ -32,7 +33,6 @@ my %WriteMakefileArgs = (
     "warnings" => 0
   },
   "TEST_REQUIRES" => {
-    "B" => 0,
     "ExtUtils::MakeMaker" => 0,
     "File::Spec" => 0,
     "Test::Builder" => 0,

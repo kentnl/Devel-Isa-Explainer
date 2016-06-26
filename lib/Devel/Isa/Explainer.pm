@@ -12,14 +12,17 @@ our $VERSION = '0.002002';
 
 use Exporter ();
 use Term::ANSIColor 3.00 ('colored');    # bright_
-use Carp ('croak');
+use Carp        ('croak');
 use MRO::Compat ();
+use B           ('svref_2object');
 use Devel::Isa::Explainer::_MRO qw( get_linear_class_shadows get_parents );
 
 
 # Perl critic is broken. This is not a void context.
 ## no critic (BuiltinFunctions::ProhibitVoidMap)
 use constant 1.03 ( { map { ( ( sprintf '_E%x', $_ ), ( sprintf ' (id: %s#%d)', __PACKAGE__, $_ ), ) } 1 .. 5 } );
+
+use constant _HAS_CONST => B::CV->can('CONST');
 
 use namespace::clean;
 
@@ -237,7 +240,19 @@ sub _extract_mro {
     ## no critic (Subroutines::ProhibitCallsToUnexportedSubs)
     $isa_entry->{mro} = mro::get_mro( $isa_entry->{class} );
     for my $sub ( keys %{ $isa_entry->{subs} } ) {
-      delete $isa_entry->{subs}->{$sub}->{ref};
+      my $sub_data = $isa_entry->{subs}->{$sub};
+      @{$sub_data}{ 'xsub', 'constant', 'stub' } = ( 0, 0, 0 );
+      my $ref = delete $sub_data->{ref};
+      my $cv  = svref_2object($ref);
+      if ( _HAS_CONST ? $cv->CONST : ref $cv->XSUBANY ) {
+        $sub_data->{constant} = 1;
+      }
+      elsif ( $cv->XSUB ) {
+        $sub_data->{xsub} = 1;
+      }
+      elsif ( not defined &{$ref} ) {
+        $sub_data->{stub} = 1;
+      }
     }
   }
   if ( not $found_interesting ) {
