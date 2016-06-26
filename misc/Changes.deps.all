@@ -8,6 +8,9 @@ This file contains ALL changes in dependencies in both REQUIRED / OPTIONAL depen
  - B
  - Test::Differences
 
+ [Removed / runtime requires]
+ - Package::Stash
+
 0.002001 2016-05-19T14:07:12Z
 
 0.002000 2016-05-19T12:30:00Z

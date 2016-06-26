@@ -63,7 +63,6 @@
       "File::Spec" : "3.62",
       "MRO::Compat" : "0.12",
       "Module::Load" : "0.32",
-      "Package::Stash" : "0.37",
       "Pod::Coverage::TrustPod" : "0.100003",
       "Scalar::Util" : "1.45",
       "Software::License::Perl_5" : "0.103012",

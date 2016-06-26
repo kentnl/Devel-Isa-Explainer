@@ -88,7 +88,6 @@ do { my $x = {
                                       'Exporter' => '0',
                                       'MRO::Compat' => '0',
                                       'Module::Load' => '0',
-                                      'Package::Stash' => '0',
                                       'Scalar::Util' => '0',
                                       'Term::ANSIColor' => '3.00',
                                       'constant' => '1.03',

@@ -27,6 +27,7 @@ our @EXPORT_OK = qw(
   is_mro_proxy
   get_linear_isa
   get_package_sub
+  get_package_subs
 );
 
 BEGIN {
@@ -132,6 +133,47 @@ sub get_package_sub {
   return \&{"${package}::${sub}"};
 }
 
+
+
+
+
+
+
+
+
+
+
+# like get_package_sub, but does a whole class at once and returns a hashref
+# of { name => CODEREF }
+sub get_package_subs {
+  my ($package)   = @_;
+  my ($namespace) = do {
+    no strict 'refs';
+    \%{"${package}::"};
+  };
+  my (@symnames) = do {
+    no strict 'refs';
+    keys %{"${package}::"};
+  };
+  my $subs = {};
+  for my $symname (@symnames) {
+
+    my $reftype = reftype \$namespace->{$symname};
+
+    # Globs are only subs if they contain a CODE slot
+    # all non-globs vivify to subs.
+    # Order can't be changed though, because the second test requires the
+    # first to be true to test, so defined is only tested when eq.
+    next if ( 'GLOB' eq $reftype ) and not defined *{ \$namespace->{$symname} }{'CODE'};
+    next if MRO_PROXIES and is_mro_proxy( $package, $symname );
+    $subs->{$symname} =
+      'GLOB' eq $reftype
+      ? *{ \$namespace->{$symname} }{'CODE'}
+      : \&{"${package}::${symname}"};
+  }
+  $subs;
+}
+
 1;
 
 __END__
@@ -188,6 +230,14 @@ Fake proxy methods (such as Class::C3 proxies) and stubs are ignored by this
 and instead return C<undef>
 
   $result = undef / CODEREF
+
+=head2 get_package_subs
+
+  my $hashref = get_package_subs( $packagename );
+
+Returns a hash of the packages directly defined C<sub>'s.
+
+  $result = { SUBNAME => CODEREF, ... };
 
 =head1 AUTHOR
 
