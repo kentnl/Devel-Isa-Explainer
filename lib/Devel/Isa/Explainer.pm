@@ -216,12 +216,10 @@ sub _pp_class {
   return $out;
 }
 
-sub _extract_mro {
-  my ($class)     = @_;
-  my ($seen_subs) = {};
-
-  ## no critic (ProhibitCallsToUnexportedSubs)
-  my (@isa) = @{ mro::get_linear_isa($class) };
+sub _extract_subs {
+  my (@isa)             = @_;
+  my $seen_subs         = {};
+  my $found_interesting = 0;
 
   # Discover all subs and compute full MRO every time a new sub-name
   # is found
@@ -230,7 +228,6 @@ sub _extract_mro {
       next if exists $seen_subs->{$sub};
 
       # Compute the full sub->package MRO table bottom up
-
       $seen_subs->{$sub} = [];
       my $currently_visible;
       for my $class ( reverse @isa ) {
@@ -238,13 +235,34 @@ sub _extract_mro {
 
         # Record the frame where the first new instance is seen.
         if ( not defined $currently_visible or $currently_visible != $coderef ) {
-          unshift @{ $seen_subs->{$sub} }, $class;    # note: we're working bottom-up
+
+          # note: we're working bottom-up
+
+          unshift @{ $seen_subs->{$sub} }, $class;
+
+          # UNIVERSAL is not interesting, it is always present,
+          # but if any parents turn up with subs? Interested
+          $found_interesting++ unless 'UNIVERSAL' eq $class;
           $currently_visible = $coderef;
           next;
         }
       }
     }
   }
+  return ( $found_interesting, $seen_subs );
+}
+
+sub _extract_mro {
+  my ($class) = @_;
+
+  ## no critic (ProhibitCallsToUnexportedSubs)
+  my (@isa) = @{ mro::get_linear_isa($class) };
+
+  # UNIVERSAL must be assumed last because mro does not return it
+  #   this also returns any parents UNIVERSAL may have had injected.
+  push @isa, @{ mro::get_linear_isa('UNIVERSAL') };
+
+  my ( $found_interesting, $seen_subs ) = _extract_subs(@isa);
 
   my $class_data = {};
 
@@ -270,7 +288,7 @@ sub _extract_mro {
   # Order class structures by MRO order
   my (@mro_order) = map { { class => $_, subs => $class_data->{$_} || {} } } @isa;
 
-  if ( 1 > @mro_order or ( 1 >= @mro_order and 1 > keys %{ $mro_order[0]->{subs} } ) ) {
+  if ( not $found_interesting ) {
 
     # Huh, No inheritance, and no subs. K.
     my $module_path = $class;
