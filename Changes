@@ -1,6 +1,6 @@
 Release history for Devel-Isa-Explainer
 
-0.002002 2016-06-26T19:22:10Z 74d1604
+0.002002 2016-06-26T19:30:04Z 2cdc6ca
  - UNIVERSAL now automatically shown in inheritance. ( Closes #11 )
  - discovering subs using "can" now removed, as "can" was prematurely exposing subs in crossed inheritances, which
    leads to over-zealous de-duplication, and additional appearances of shadowing where no actual shadowing was

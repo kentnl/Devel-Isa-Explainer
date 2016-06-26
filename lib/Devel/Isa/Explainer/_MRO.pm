@@ -30,6 +30,8 @@ our @EXPORT_OK = qw(
   get_package_subs
   get_linear_class_shadows
   get_parents
+  get_linear_method_map
+  get_linear_class_map
 );
 
 BEGIN {
@@ -262,6 +264,44 @@ sub get_parents {
   ['UNIVERSAL'];
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+sub get_linear_method_map {
+  my ( $class, $method ) = @_;
+  return [ map { [ $_, get_package_sub( $_, $method ) ] } @{ get_linear_isa($class) } ];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+sub get_linear_class_map {
+  my ($class) = @_;
+  [ map { [ $_, get_package_subs($_) ] } @{ get_linear_isa($class) } ];
+}
+
 1;
 
 __END__
@@ -358,6 +398,30 @@ at which point it will return an empty list.
 Because despite the fact a parent of C<UNIVERSAL> can call C<UNIVERSAL> methods,
 reporting C<< UNIVERSAL->parent->parent == UNIVERSAL >> will of course create cycles
 for anyone who touches it.
+
+=head2 get_linear_method_map
+
+  my $arrayref = get_linear_method_map( $classname, $method )
+
+Returns an C<ArrayRef> describing the vertical stack of a given method.
+
+C<ISA> levels without defined C<CodeRefs> are represented as C<undef>
+
+  $result   = [ $arrayref, $arrayref, $arrayref, ... ]
+  $arrayref = [ CLASSNAME, undef / CODEREF           ]
+
+=head2 get_linear_class_map
+
+  my $arrayref = get_linear_class_map( $classname )
+
+Returns C<CodeRef> stashes for all packages in C<$classname>'s inheritance (including C<UNIVERSAL>s)
+in method-resolution-order.
+
+Returns:
+
+  $result   = [ $arrayref, $arrayref, $arrayref,  ... ]
+  $arrayref = [ CLASSNAME, $submap                    ]
+  $submap   = { SUBNAME => CODEREF,               ... }
 
 =head1 AUTHOR
 

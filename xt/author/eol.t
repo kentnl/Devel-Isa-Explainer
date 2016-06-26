@@ -28,7 +28,10 @@ my @files = (
     't/internals/mro/01-get-linear-isa.t',
     't/internals/mro/02-get-package-sub.t',
     't/internals/mro/03-get-package-subs.t',
-    't/internals/mro/04-get-linear-class-shadows.t'
+    't/internals/mro/04-get-linear-class-shadows.t',
+    't/internals/mro/05-get-linear-method-map.t',
+    't/internals/mro/06-get-linear-class-map.t',
+    't/internals/mro/07-hostile-method-maps.t'
 );
 
 eol_unix_ok($_, { trailing_whitespace => 1 }) foreach @files;
