@@ -25,7 +25,8 @@ my @files = (
     't/internals/max-width.t',
     't/internals/mro/01-get-linear-isa.t',
     't/internals/mro/02-get-package-sub.t',
-    't/internals/mro/03-get-package-subs.t'
+    't/internals/mro/03-get-package-subs.t',
+    't/internals/mro/04-get-linear-class-shadows.t'
 );
 
 eol_unix_ok($_, { trailing_whitespace => 1 }) foreach @files;
