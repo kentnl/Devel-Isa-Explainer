@@ -69,6 +69,7 @@
       "Test::Builder" : "1.302022",
       "Test::CPAN::Changes" : "0.400002",
       "Test::CPAN::Meta" : "0.25",
+      "Test::Differences" : "0.64",
       "Test::EOL" : "1.6",
       "Test::Kwalitee" : "1.22",
       "Test::More" : "1.302022",

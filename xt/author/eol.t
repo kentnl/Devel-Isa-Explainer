@@ -10,7 +10,9 @@ my @files = (
     'bin/isa-splain',
     'lib/App/Isa/Splain.pm',
     'lib/Devel/Isa/Explainer.pm',
+    'lib/Devel/Isa/Explainer/_MRO.pm',
     't/00-compile/lib_App_Isa_Splain_pm.t',
+    't/00-compile/lib_Devel_Isa_Explainer__MRO_pm.t',
     't/00-compile/lib_Devel_Isa_Explainer_pm.t',
     't/00-report-prereqs.dd',
     't/00-report-prereqs.t',
@@ -19,7 +21,8 @@ my @files = (
     't/cli/basic.t',
     't/cli/dash-m.t',
     't/internals/02-isacache-hide.t',
-    't/internals/max-width.t'
+    't/internals/max-width.t',
+    't/internals/mro/01-get-linear-isa.t'
 );
 
 eol_unix_ok($_, { trailing_whitespace => 1 }) foreach @files;

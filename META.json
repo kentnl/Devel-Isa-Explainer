@@ -122,6 +122,7 @@
             "ExtUtils::MakeMaker" : "0",
             "File::Spec" : "0",
             "Test::Builder" : "0",
+            "Test::Differences" : "0",
             "Test::More" : "0.89",
             "perl" : "5.006"
          }
@@ -383,7 +384,8 @@
                "Dist::Zilla::Plugin::Test::Compile::PerFile" : {
                   "file" : [
                      "lib/App/Isa/Splain.pm",
-                     "lib/Devel/Isa/Explainer.pm"
+                     "lib/Devel/Isa/Explainer.pm",
+                     "lib/Devel/Isa/Explainer/_MRO.pm"
                   ],
                   "path_translator" : "base64_filter",
                   "prefix" : "t/00-compile",

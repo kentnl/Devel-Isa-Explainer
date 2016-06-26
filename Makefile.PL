@@ -35,11 +35,12 @@ my %WriteMakefileArgs = (
     "ExtUtils::MakeMaker" => 0,
     "File::Spec" => 0,
     "Test::Builder" => 0,
+    "Test::Differences" => 0,
     "Test::More" => "0.89"
   },
   "VERSION" => "0.002002",
   "test" => {
-    "TESTS" => "t/*.t t/00-compile/*.t t/cli/*.t t/internals/*.t"
+    "TESTS" => "t/*.t t/00-compile/*.t t/cli/*.t t/internals/*.t t/internals/mro/*.t"
   }
 );
 
@@ -54,6 +55,7 @@ my %FallbackPrereqs = (
   "Package::Stash" => 0,
   "Term::ANSIColor" => "3.00",
   "Test::Builder" => 0,
+  "Test::Differences" => 0,
   "Test::More" => "0.89",
   "constant" => "1.03",
   "namespace::clean" => 0,
