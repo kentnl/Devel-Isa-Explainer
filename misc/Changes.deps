@@ -1,6 +1,6 @@
 This file contains changes in REQUIRED dependencies for standard CPAN phases (configure/build/runtime/test)
 
-0.002002
+0.002900
  [Added / runtime requires]
  - B
  - Scalar::Util

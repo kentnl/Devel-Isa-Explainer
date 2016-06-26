@@ -132,14 +132,14 @@
    "provides" : {
       "App::Isa::Splain" : {
          "file" : "lib/App/Isa/Splain.pm",
-         "version" : "0.002002"
+         "version" : "0.002900"
       },
       "Devel::Isa::Explainer" : {
          "file" : "lib/Devel/Isa/Explainer.pm",
-         "version" : "0.002002"
+         "version" : "0.002900"
       }
    },
-   "release_status" : "stable",
+   "release_status" : "testing",
    "resources" : {
       "bugtracker" : {
          "web" : "https://github.com/kentnl/Devel-Isa-Explainer/issues"
@@ -151,7 +151,7 @@
          "web" : "https://github.com/kentnl/Devel-Isa-Explainer"
       }
    },
-   "version" : "0.002002",
+   "version" : "0.002900",
    "x_BuiltWith" : {
       "external_file" : "misc/built_with.json"
    },
@@ -668,7 +668,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "0.002002-source",
+                  "tag" : "0.002900-source",
                   "tag_format" : "%v-source",
                   "tag_message" : "v%v"
                },
@@ -759,7 +759,7 @@
                   "branch" : "releases",
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "0.002002",
+                  "tag" : "0.002900",
                   "tag_format" : "%v",
                   "tag_message" : "v%v"
                },
@@ -915,7 +915,7 @@
       "zilla" : {
          "class" : "Dist::Zilla::Dist::Builder",
          "config" : {
-            "is_trial" : "0"
+            "is_trial" : "1"
          },
          "version" : "5.047"
       }
