@@ -14,7 +14,7 @@ use Exporter ();
 use Term::ANSIColor 3.00 ('colored');    # bright_
 use Carp ('croak');
 use MRO::Compat ();
-use Devel::Isa::Explainer::_MRO qw( get_linear_isa get_package_subs );
+use Devel::Isa::Explainer::_MRO qw( get_linear_class_shadows );
 
 
 # Perl critic is broken. This is not a void context.
@@ -217,59 +217,26 @@ sub _pp_class {
   return $out;
 }
 
-sub _extract_subs {
-  my (@isa)             = @_;
-  my $seen_subs         = {};
-  my $found_interesting = 0;
-
-  # Discover all subs and compute full MRO every time a new sub-name
-  # is found
-  for my $isa ( reverse @isa ) {
-    my $subs = get_package_subs($isa);
-    for my $sub ( keys %{$subs} ) {
-      $seen_subs->{$sub} = [] unless exists $seen_subs->{$sub};
-      unshift @{ $seen_subs->{$sub} }, $isa;
-
-      # UNIVERSAL is not interesting, it is always present,
-      # but if any parents turn up with subs? Interested
-      $found_interesting++ unless 'UNIVERSAL' eq $isa;
-    }
-  }
-  return ( $found_interesting, $seen_subs );
-}
-
 sub _extract_mro {
   my ($class) = @_;
 
-  ## no critic (ProhibitCallsToUnexportedSubs)
-  my (@isa) = @{ get_linear_isa($class) };
+  my (@mro_order) = @{ get_linear_class_shadows($class) };
 
-  my ( $found_interesting, $seen_subs ) = _extract_subs(@isa);
+  my $found_interesting = 0;
+  for my $isa_entry (@mro_order) {
 
-  my $class_data = {};
-
-  # Group "seen subs" into class oriented structures,
-  # and classify them.
-  for my $sub ( keys %{$seen_subs} ) {
-    my @classes = @{ $seen_subs->{$sub} };
-
-    for my $isa ( @{ $seen_subs->{$sub} } ) {
-
-      # mark all subs both shadowing and shadowed until proven otherwise
-      $class_data->{$isa}->{$sub} = { shadowed => 1, shadowing => 1 };
-    }
-
-    # mark top-most sub unshadowed
-    $class_data->{ $classes[0] }->{$sub}->{shadowed} = 0;
-
-    # mark bottom-most sub unshadowing
-    $class_data->{ $classes[-1] }->{$sub}->{shadowing} = 0;
-
+    # Universal will always be present, but parents/children
+    # of UNIVERSAL are "interesting"
+    next if 'UNIVERSAL' eq $isa_entry->{class};
+    next unless keys %{ $isa_entry->{subs} };
+    $found_interesting++;
+    last;
   }
-
-  # Order class structures by MRO order
-  my (@mro_order) = map { { class => $_, subs => $class_data->{$_} || {} } } @isa;
-
+  for my $isa_entry (@mro_order) {
+    for my $sub ( keys %{ $isa_entry->{subs} } ) {
+      delete $isa_entry->{subs}->{$sub}->{ref};
+    }
+  }
   if ( not $found_interesting ) {
 
     # Huh, No inheritance, and no subs. K.

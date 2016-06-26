@@ -28,6 +28,7 @@ our @EXPORT_OK = qw(
   get_linear_isa
   get_package_sub
   get_package_subs
+  get_linear_class_shadows
 );
 
 BEGIN {
@@ -172,6 +173,55 @@ sub get_package_subs {
       : \&{"${package}::${symname}"};
   }
   $subs;
+}
+
+=func get_linear_class_shadows
+
+  my $arrayref = get_linear_class_shadows( $classname )
+
+Combines C<get_linear_isa()> and C<get_package_subs()>,
+traversing the inheritance bottom up, computing shadowing
+as it goes.
+
+Returns:
+
+  $result     = [ $hashref, $hashref, $hashref,   ... ]
+  $hashrefref = { class => CLASSNAME, subs => $submap }
+  $submap     = { SUBNAME => $subrecord,          ... }
+  $subrecord  = { shadowing => BOOLEAN,
+                  shadowed  => BOOLEAN,
+                  ref       => CODEREF,               }
+
+=cut
+
+sub get_linear_class_shadows {
+  my ($class) = @_;
+
+  # Contains the "image" made bottom up
+  # for comparison/detecting shadows.
+  my $methods = {};
+  my @isa_out;
+  for my $package ( reverse @{ get_linear_isa($class) } ) {
+    my $subs = get_package_subs($package);
+    my $node = {};
+    for my $subname ( keys %{$subs} ) {
+
+      # first node is never shadowing
+      if ( not exists $methods->{$subname} ) {
+        $node->{$subname} = { shadowing => 0, shadowed => 0, ref => $subs->{$subname} };
+
+        # Contains a reference to the previous incarnation
+        # for later modification
+        $methods->{$subname} = $node->{$subname};
+        next;
+      }
+      $node->{$subname} = { shadowing => 1, shadowed => 0, ref => $subs->{$subname} };
+      $methods->{$subname}->{shadowed} = 1;        # mark previous version shadowed
+      $methods->{$subname} = $node->{$subname};    # update current
+    }
+    unshift @isa_out, { class => $package, subs => $node };
+  }
+  \@isa_out;
 }
 
 1;
