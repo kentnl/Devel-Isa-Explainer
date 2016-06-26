@@ -4,7 +4,7 @@ Devel::Isa::Explainer - Pretty Print Hierarchies of Subs in Packages
 
 # VERSION
 
-version 0.002002
+version 0.002900
 
 # SYNOPSIS
 
