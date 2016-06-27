@@ -33,6 +33,18 @@ our @EXPORT_OK = qw(
   get_flattened_class
 );
 
+our %SHADOW_EXEMPT = (
+  map { $_ => 1 } (
+
+    # http://perldoc.perl.org/perlmod.html#Making-your-module-threadsafe
+    # CLONE is called at all levels, shadowed or not
+    'CLONE',
+
+    # CLONE_SKIP is also called on all levels, shadowed or not.
+    ( $] >= 5.008007 ? 'CLONE_SKIP' : () ),
+  )
+);
+
 BEGIN {
   # MRO Proxies removed since 5.009_005
   *MRO_PROXIES = ( $] <= 5.009005 ) ? sub() { 1 } : sub() { 0 };
@@ -217,8 +229,13 @@ sub get_linear_class_shadows {
         $methods->{$subname} = $node->{$subname};
         next;
       }
-      $node->{$subname} = { shadowing => 1, shadowed => 0, ref => $subs->{$subname} };
-      $methods->{$subname}->{shadowed} = 1;        # mark previous version shadowed
+      if ( exists $SHADOW_EXEMPT{$subname} ) {
+        $node->{$subname} = { shadowing => 0, shadowed => 0, ref => $subs->{$subname} };
+      }
+      else {
+        $node->{$subname} = { shadowing => 1, shadowed => 0, ref => $subs->{$subname} };
+        $methods->{$subname}->{shadowed} = 1;    # mark previous version shadowed
+      }
       $methods->{$subname} = $node->{$subname};    # update current
     }
     unshift @isa_out, { class => $package, subs => $node };

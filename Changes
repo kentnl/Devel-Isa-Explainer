@@ -1,6 +1,7 @@
 Release history for Devel-Isa-Explainer
 
 {{$NEXT}}
+ - CLONE/CLONE_SKIP now exempt from shadowing logic. ( Closes #5 )
 
 0.002900 2016-06-26T19:35:43Z 7405ed0
  - UNIVERSAL now automatically shown in inheritance. ( Closes #11 )
