@@ -21,8 +21,6 @@ BEGIN {
   *_mro_is_universal   = \&mro::is_universal;
 }
 
-# yes, this is evil
-
 our @EXPORT_OK = qw(
   is_mro_proxy
   get_linear_isa
