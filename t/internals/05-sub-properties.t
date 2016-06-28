@@ -19,6 +19,7 @@ my @tests = (
     wanted => {
       constant => 0,
       stub     => 0,
+      sub_name => 'B::svref_2object',
       xsub     => 1,
     },
   },
@@ -28,6 +29,7 @@ my @tests = (
     wanted => {
       constant => 0,
       stub     => 0,
+      sub_name => 'Devel::Isa::Explainer::explain_isa',
       xsub     => 0,
     },
   },
@@ -37,6 +39,7 @@ my @tests = (
     wanted => {
       constant => 0,
       stub     => 1,
+      sub_name => 'My::Test::stub',
       xsub     => 0,
     },
   },
@@ -46,11 +49,19 @@ my @tests = (
     wanted => {
       constant => 1,
       stub     => 0,
+      sub_name => 'My::Test::constant',
       xsub     => 0,
     },
   },
 );
 
+unless ( exists get_sub_properties( \&get_sub_properties )->{sub_name} ) {
+  if ( $ENV{RELEASE_TESTING} ) {
+    fail("RELEASE TESTING requires either Sub::Util or Sub::Identify");
+  }
+  note "sub naming comparisons elided";
+  delete $_->{wanted}->{sub_name} for @tests;
+}
 for my $test (@tests) {
   eq_or_diff( get_sub_properties( $test->{ref} ), $test->{wanted}, $test->{name} . ' is expected', );
 }

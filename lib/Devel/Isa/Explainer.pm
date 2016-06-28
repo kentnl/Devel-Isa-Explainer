@@ -17,6 +17,21 @@ use MRO::Compat ();
 use B           ('svref_2object');
 use Devel::Isa::Explainer::_MRO qw( get_linear_class_shadows get_parents );
 
+BEGIN {
+  # Lazily find the best XS Sub name-fetching implementation possible.
+  # Preferring an already loaded implementation where possible.
+  #<<< Tidy Guard
+  my $impl = ( $INC{'Sub/Util.pm'}               and defined &Sub::Util::subname )          ? 'SU'
+           : ( $INC{'Sub/Identify.pm'}           and defined &Sub::Identify::sub_fullname ) ? 'SI'
+           : ( eval { require Sub::Util; 1 }     and defined &Sub::Util::subname )          ? 'SU'
+           : ( eval { require Sub::Identify; 1 } and defined &Sub::Identify::sub_fullname ) ? 'SI'
+           :                                                                                  q{};
+  *_get_sub_name = 'SU' eq $impl  ? \&Sub::Util::subname
+                 : 'SI' eq $impl  ? \&Sub::Identify::sub_fullname
+                 :                  sub { $_[1] };
+  #>>>
+  *_can_get_sub_name = $impl ? sub() { 1 } : sub () { 0 };
+}
 
 # Perl critic is broken. This is not a void context.
 ## no critic (BuiltinFunctions::ProhibitVoidMap)
@@ -237,6 +252,7 @@ sub _get_sub_properties {
   elsif ( not defined &{$ref} ) {
     $sub_data->{stub} = 1;
   }
+  $sub_data->{sub_name} = _get_sub_name($ref) if _can_get_sub_name;
   return $sub_data;
 }
 

@@ -1,6 +1,9 @@
 This file contains changes to DEVELOPMENT dependencies only ( both REQUIRED and OPTIONAL )
 
 0.002901
+ [Added / develop requires]
+ - Dist::Zilla::Plugin::Prereqs::Soften
+ - Dist::Zilla::Plugin::RemovePhasedPrereqs
 
 0.002900 2016-06-26T19:35:43Z
 

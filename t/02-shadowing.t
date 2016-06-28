@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use Test::Differences;
 use Term::ANSIColor qw( colorstrip );
 
 # ABSTRACT: Detect shadowing
@@ -66,17 +67,19 @@ is( scalar keys %{ $mro->[0]->{subs} }, 1, "base class has one subh" );
 is( scalar keys %{ $mro->[1]->{subs} }, 3, "middle class has 3 subs" );
 is( scalar keys %{ $mro->[2]->{subs} }, 3, "base class has 3 subs" );
 
-is_deeply(
+delete $mro->[$_]->{subs}->{three_layer_shadow}->{sub_name} for 0 .. 2;
+
+eq_or_diff(
   $mro->[0]->{subs}->{three_layer_shadow},
   { shadowing => 1, shadowed => 0, xsub => 0, constant => 0, stub => 0 },
   "three layer shadow top layer shadowing but not shadowed"
 );
-is_deeply(
+eq_or_diff(
   $mro->[1]->{subs}->{three_layer_shadow},
   { shadowing => 1, shadowed => 1, xsub => 0, constant => 0, stub => 0 },
   "three layer shadow middle layer shadowing and shadowed"
 );
-is_deeply(
+eq_or_diff(
   $mro->[2]->{subs}->{three_layer_shadow},
   { shadowing => 0, shadowed => 1, xsub => 0, constant => 0, stub => 0 },
   "three layer shadow bottom layer shadowed but not shadowing"

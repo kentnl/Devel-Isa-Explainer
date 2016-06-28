@@ -28,5 +28,12 @@ match = \.(t|pm)$
 
 [ExecDir]
 dir = bin
+
 [Prereqs]
+
+[RemovePhasedPrereqs]
+remove_runtime = Sub::Identify
+
+[Prereqs::Soften]
+module = Sub::Util
 
