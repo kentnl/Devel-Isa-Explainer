@@ -6,7 +6,12 @@ use B ();
 
 use Devel::Isa::Explainer ();
 
-*extract_mro = \&Devel::Isa::Explainer::_extract_mro;
+*get_sub_properties = \&Devel::Isa::Explainer::_get_sub_properties;
+*extract_mro        = \&Devel::Isa::Explainer::_extract_mro;
+
+ok( get_sub_properties( \&B::svref_2object )->{xsub},                    'B::svref_2object is an xsub' );
+ok( !get_sub_properties( \&Devel::Isa::Explainer::explain_isa )->{xsub}, 'Devel::Isa::Explainer::explain_isa is not an xsub' );
+
 {
   my $mro  = extract_mro("B");
   my $fail = 0;

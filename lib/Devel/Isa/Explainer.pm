@@ -220,6 +220,26 @@ sub _pp_class {
   return $out;
 }
 
+sub _get_sub_properties {
+  my ( $ref, ) = @_;
+  my $sub_data = {
+    xsub     => 0,
+    constant => 0,
+    stub     => 0,
+  };
+  my $cv = svref_2object($ref);
+  if ( _HAS_CONST ? $cv->CONST : ref $cv->XSUBANY ) {
+    $sub_data->{constant} = 1;
+  }
+  elsif ( $cv->XSUB ) {
+    $sub_data->{xsub} = 1;
+  }
+  elsif ( not defined &{$ref} ) {
+    $sub_data->{stub} = 1;
+  }
+  return $sub_data;
+}
+
 sub _extract_mro {
   my ($class) = @_;
 
@@ -241,18 +261,8 @@ sub _extract_mro {
     $isa_entry->{mro} = mro::get_mro( $isa_entry->{class} );
     for my $sub ( keys %{ $isa_entry->{subs} } ) {
       my $sub_data = $isa_entry->{subs}->{$sub};
-      @{$sub_data}{ 'xsub', 'constant', 'stub' } = ( 0, 0, 0 );
-      my $ref = delete $sub_data->{ref};
-      my $cv  = svref_2object($ref);
-      if ( _HAS_CONST ? $cv->CONST : ref $cv->XSUBANY ) {
-        $sub_data->{constant} = 1;
-      }
-      elsif ( $cv->XSUB ) {
-        $sub_data->{xsub} = 1;
-      }
-      elsif ( not defined &{$ref} ) {
-        $sub_data->{stub} = 1;
-      }
+      my $ref      = delete $sub_data->{ref};
+      $isa_entry->{subs}->{$sub} = { %{$sub_data}, %{ _get_sub_properties( $ref, ) }, };
     }
   }
   if ( not $found_interesting ) {
