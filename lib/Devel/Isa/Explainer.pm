@@ -40,12 +40,17 @@ our @PUBLIC           = qw( bold bright_green );
 our @SHADOWED_PRIVATE = qw( magenta );
 our @SHADOWED_PUBLIC  = qw( red );
 
-our $MAX_WIDTH       = 80;
-our $SHOW_SHADOWED   = 1;
-our $INDENT          = q[ ] x 4;
-our $SHADOW_SUFFIX   = q{(^)};
-our $SHADOWED_SUFFIX = q{};                # TBD
-our $CLUSTERING      = 'type_clustered';
+our $MAX_WIDTH              = 80;
+our $SHOW_SHADOWED          = 1;
+our $INDENT                 = q[ ] x 4;
+our $SUFFIX_START           = q{(};
+our $SUFFIX_STOP            = q{)};
+our $SHADOWING_SUFFIX       = q{^};
+our $CONSTANT_SUFFIX        = q{};                # TBD
+our $XSUB_SUFFIX            = q{};                # TBD
+our $SHADOWED_SUFFIX        = q{};                # TBD
+our $SHADOWED_BOTTOM_SUFFIX = q{};                # TBD
+our $CLUSTERING             = 'type_clustered';
 
 =func C<explain_isa>
 
@@ -82,8 +87,21 @@ sub _hl_TYPE_UTIL {
 }
 
 sub _hl_suffix {
-  return colored( $_[0], $SHADOW_SUFFIX )   if $_[1]->{shadowing};
-  return colored( $_[0], $SHADOWED_SUFFIX ) if $_[1]->{shadowed};
+  my ($suffix_flags) = q[];
+  if ( $_[1]->{shadowed} and not $_[1]->{shadowing} ) {
+    $suffix_flags .= $SHADOWED_BOTTOM_SUFFIX;
+  }
+  else {
+    $suffix_flags .= $SHADOWING_SUFFIX if $_[1]->{shadowing};
+    $suffix_flags .= $SHADOWED_SUFFIX  if $_[1]->{shadowed};
+  }
+  $suffix_flags .= $XSUB_SUFFIX     if $_[1]->{xsub};
+  $suffix_flags .= $CONSTANT_SUFFIX if $_[1]->{constant};
+
+  return colored( $_[0], $SUFFIX_START . $suffix_flags . $SUFFIX_STOP )
+    if length $suffix_flags and ( $_[1]->{shadowing} or $_[1]->{shadowed} );
+  return $SUFFIX_START . $suffix_flags . $SUFFIX_STOP if length $suffix_flags;
+
   return q[];
 }
 
@@ -120,6 +138,16 @@ sub _pp_key {
     push @tokens, 'Private/Boring Sub another and shadowed itself: '
       . _hl_PRIVATE( 'shadowing_shadowed_example', { shadowed => 1, shadowing => 1 } );
   }
+  my @suffixes;
+  if ($SHOW_SHADOWED) {
+    push @suffixes, 'shadowing=' . _hl_suffix( ['reset'], { shadowing => 1 } ) if length $SHADOWING_SUFFIX;
+    push @suffixes, 'shadowed=' . _hl_suffix( ['reset'], { shadowing => 1, shadowed => 1 } ) if length $SHADOWED_SUFFIX;
+    push @suffixes, 'last_shadowed=' . _hl_suffix( ['reset'], { shadowed => 1 } ) if length $SHADOWED_BOTTOM_SUFFIX;
+  }
+  push @suffixes, 'xsub=' . _hl_suffix( ['reset'], { xsub => 1 } ) if length $XSUB_SUFFIX;
+  push @suffixes, 'constant=' . _hl_suffix( ['reset'], { constant => 1 } ) if length $CONSTANT_SUFFIX;
+
+  push @tokens, 'Suffixes: ' . join q[, ], @suffixes if @suffixes;
   push @tokens, 'No Subs: ()';
   return sprintf "Key:\n$INDENT%s\n\n", join qq[\n$INDENT], @tokens;
 }

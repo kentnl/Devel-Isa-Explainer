@@ -21,8 +21,6 @@ BEGIN {
   *_mro_is_universal   = \&mro::is_universal;
 }
 
-# yes, this is evil
-
 our @EXPORT_OK = qw(
   is_mro_proxy
   get_linear_isa
@@ -33,6 +31,18 @@ our @EXPORT_OK = qw(
   get_linear_method_map
   get_linear_class_map
   get_flattened_class
+);
+
+our %SHADOW_EXEMPT = (
+  map { $_ => 1 } (
+
+    # http://perldoc.perl.org/perlmod.html#Making-your-module-threadsafe
+    # CLONE is called at all levels, shadowed or not
+    'CLONE',
+
+    # CLONE_SKIP is also called on all levels, shadowed or not.
+    ( $] >= 5.008007 ? 'CLONE_SKIP' : () ),
+  )
 );
 
 BEGIN {
@@ -219,8 +229,13 @@ sub get_linear_class_shadows {
         $methods->{$subname} = $node->{$subname};
         next;
       }
-      $node->{$subname} = { shadowing => 1, shadowed => 0, ref => $subs->{$subname} };
-      $methods->{$subname}->{shadowed} = 1;        # mark previous version shadowed
+      if ( exists $SHADOW_EXEMPT{$subname} ) {
+        $node->{$subname} = { shadowing => 0, shadowed => 0, ref => $subs->{$subname} };
+      }
+      else {
+        $node->{$subname} = { shadowing => 1, shadowed => 0, ref => $subs->{$subname} };
+        $methods->{$subname}->{shadowed} = 1;    # mark previous version shadowed
+      }
       $methods->{$subname} = $node->{$subname};    # update current
     }
     unshift @isa_out, { class => $package, subs => $node };
